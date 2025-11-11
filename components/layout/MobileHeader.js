@@ -1,21 +1,62 @@
 "use client";
-import { AppBar, Toolbar, IconButton, Typography, Box } from "@mui/material";
+
+import {
+  AppBar,
+  Toolbar,
+  IconButton,
+  Typography,
+  Box,
+  List,
+  ListItem,
+  ListItemText,
+  ListItemIcon,
+} from "@mui/material";
 import SearchIcon from "@mui/icons-material/Search";
-import React from "react";
+import MenuIcon from "@mui/icons-material/Menu";
+import React, { useEffect } from "react";
 import { useSelector } from "react-redux";
 import { selectSettings } from "@/store/settings/settings.selector";
 import Loader from "../common/Loader";
 import Image from "next/image";
 import { setFilePath } from "@/lib/media";
 import Link from "next/link";
-import MenuIcon from "@mui/icons-material/Menu";
+import DrawerDialog from "../common/DrawerDialog";
+import { useDialogs } from "@/hooks/useDialogs/useDialogs";
+import routes from "@/constants/landing.routes";
+import { selectCategories } from "@/store/category/category.selector";
+import useMenuLinks from "@/hooks/useMenuLinks";
 
 export default function MobileHeader() {
   const settings = useSelector(selectSettings);
-  
-  if (!settings) {
-    return <Loader />;
-  }
+  const dialogs = useDialogs();
+
+  let links = useMenuLinks()
+
+  if (!settings) return <Loader />;
+
+  const handleMenuClick = () => {
+    dialogs.open(DrawerDialog, {
+      title: "منو",
+      links: [],
+      children: (
+        <List>
+          {links.map((link) => (
+            <ListItem
+              button
+              key={link.link || link.label}
+              component={Link}
+              href={link.link}
+              onClick={() => onClose()}
+            >
+              <ListItemIcon>{link.icon}</ListItemIcon>
+
+              <ListItemText primary={link.label} />
+            </ListItem>
+          ))}
+        </List>
+      ),
+    });
+  };
 
   return (
     <AppBar
@@ -29,12 +70,12 @@ export default function MobileHeader() {
       elevation={0}
     >
       <Toolbar sx={{ justifyContent: "space-between", height: 64 }}>
-        <IconButton color="inherit">
+        <IconButton color="inherit" onClick={handleMenuClick}>
           <MenuIcon />
         </IconButton>
 
         <Link
-          href="/"
+          href={routes.home.link}
           style={{
             display: "flex",
             alignItems: "center",
