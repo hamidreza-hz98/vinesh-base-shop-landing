@@ -27,12 +27,12 @@ import { selectCategories } from "@/store/category/category.selector";
 import useMenuLinks from "@/hooks/useMenuLinks";
 
 export default function MobileHeader() {
-  const settings = useSelector(selectSettings);
+  const { general } = useSelector(selectSettings);
   const dialogs = useDialogs();
 
   let links = useMenuLinks()
 
-  if (!settings) return <Loader />;
+  if (!general) return <Loader />;
 
   const handleMenuClick = () => {
     dialogs.open(DrawerDialog, {
@@ -83,8 +83,8 @@ export default function MobileHeader() {
           }}
         >
           <Image
-            src={setFilePath(settings.logo.path)}
-            alt={settings.name}
+            src={setFilePath(general.logo.path)}
+            alt={general.name}
             width={48}
             height={48}
             unoptimized
@@ -94,7 +94,7 @@ export default function MobileHeader() {
           />
 
           <Typography mr={1} fontWeight="bold" fontSize="1.2rem">
-            {settings.name}
+            {general.name}
           </Typography>
         </Link>
 

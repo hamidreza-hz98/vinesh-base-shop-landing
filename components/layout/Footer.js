@@ -13,6 +13,7 @@ import { selectCategories } from "@/store/category/category.selector";
 import { setRequestQuery } from "@/lib/request";
 import { getSettings } from "@/store/settings/settings.actions";
 import { selectSettings } from "@/store/settings/settings.selector";
+import { getAllBrands } from "@/store/brand/brand.action";
 
 export default function Footer() {
   const dispatch = useDispatch();
@@ -29,6 +30,8 @@ export default function Footer() {
     // if(!categories && categories.length === 0){
     dispatch(getAllCategories(body));
     // }
+
+    dispatch(getAllBrands(setRequestQuery({ page_size: 100 })));
 
     dispatch(getSettings("general"))
   }, [

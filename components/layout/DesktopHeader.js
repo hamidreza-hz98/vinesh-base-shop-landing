@@ -26,7 +26,7 @@ import routes from "@/constants/landing.routes";
 
 export default function DesktopHeader() {
   const { categories } = useSelector(selectCategories);
-  const settings = useSelector(selectSettings);
+  const { general } = useSelector(selectSettings);
 
   const [anchorEl, setAnchorEl] = React.useState(null);
 
@@ -39,7 +39,7 @@ export default function DesktopHeader() {
 
   const open = Boolean(anchorEl);
 
-  if (!categories || !settings) {
+  if (!categories || !general) {
     return <Loader />;
   }
 
@@ -62,12 +62,12 @@ export default function DesktopHeader() {
             display: { xs: "none", md: "flex" },
             justifyContent: "space-between",
             height: "100%",
-            padding: "8px",
+            padding: "8px 0px !important",
           }}
         >
           <Box sx={{ display: "flex", alignItems: "center", gap: 5 }}>
             <Link
-              href="#"
+              href={routes.home.link}
               underline="none"
               sx={{
                 display: "flex",
@@ -77,8 +77,8 @@ export default function DesktopHeader() {
               }}
             >
               <Image
-                src={setFilePath(settings.logo.path)}
-                alt={settings.name}
+                src={setFilePath(general.logo.path)}
+                alt={general.name}
                 width={64}
                 height={64}
                 unoptimized
@@ -88,7 +88,7 @@ export default function DesktopHeader() {
               />
 
               <Typography mr={1} fontWeight="bold" fontSize="1.2rem">
-                {settings.name}
+                {general.name}
               </Typography>
             </Link>
 

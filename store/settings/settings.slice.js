@@ -3,7 +3,7 @@ const { getSettings, updateSettings } = require("./settings.actions")
 
 const initialState = {
  loading: false,
- settings: {} 
+ settings: {}
 }
 
 const settingsSlice = createSlice({
@@ -22,16 +22,6 @@ const settingsSlice = createSlice({
         state.settings = action.payload
       })
       .addCase(getSettings.rejected, (state) => {
-        state.loading = false
-      })
-      .addCase(updateSettings.pending, (state) => {
-        state.loading = true
-      })
-      .addCase(updateSettings.fulfilled, (state, action) => {
-        state.loading = false
-        state.settings = action.payload.data
-      })
-      .addCase(updateSettings.rejected, (state) => {
         state.loading = false
       })
   }
