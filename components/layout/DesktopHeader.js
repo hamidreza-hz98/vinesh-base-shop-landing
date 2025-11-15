@@ -26,7 +26,9 @@ import routes from "@/constants/landing.routes";
 
 export default function DesktopHeader() {
   const { categories } = useSelector(selectCategories);
-  const { general } = useSelector(selectSettings);
+  const {general}  = useSelector(selectSettings) || {};
+
+  
 
   const [anchorEl, setAnchorEl] = React.useState(null);
 

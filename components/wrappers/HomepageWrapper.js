@@ -25,7 +25,7 @@ const HomepageWrapper = () => {
   const [mostSoldProducts, setMostSoldProducts] = useState([]);
   const [productsWithDiscount, setProductsWithDiscount] = useState([]);
 
-  const { general } = useSelector(selectSettings);
+  const { general } = useSelector(selectSettings) || {};
   const { categories } = useSelector(selectCategories);
   const { brands } = useSelector(selectBrands);
 

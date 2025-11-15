@@ -27,8 +27,8 @@ import { selectCategories } from "@/store/category/category.selector";
 import useMenuLinks from "@/hooks/useMenuLinks";
 
 export default function MobileHeader() {
-  const { general } = useSelector(selectSettings);
   const dialogs = useDialogs();
+  const { general } = useSelector(selectSettings) || {};
 
   let links = useMenuLinks()
 

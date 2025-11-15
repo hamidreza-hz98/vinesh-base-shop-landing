@@ -1,10 +1,12 @@
-const { createSlice } = require("@reduxjs/toolkit")
-const { getSettings, updateSettings } = require("./settings.actions")
+const { createSlice } = require("@reduxjs/toolkit");
+const { getSettings, updateSettings } = require("./settings.actions");
 
 const initialState = {
- loading: false,
- settings: {}
-}
+  loading: false,
+  settings: {
+    general: {}
+  },
+};
 
 const settingsSlice = createSlice({
   name: "settings",
@@ -15,16 +17,16 @@ const settingsSlice = createSlice({
   extraReducers: (builder) => {
     builder
       .addCase(getSettings.pending, (state) => {
-        state.loading = true
+        state.loading = true;
       })
       .addCase(getSettings.fulfilled, (state, action) => {
-        state.loading = false
-        state.settings = action.payload
+        state.loading = false;
+        state.settings = action.payload;
       })
       .addCase(getSettings.rejected, (state) => {
-        state.loading = false
-      })
-  }
-})
+        state.loading = false;
+      });
+  },
+});
 
-export default settingsSlice.reducer
+export default settingsSlice.reducer;

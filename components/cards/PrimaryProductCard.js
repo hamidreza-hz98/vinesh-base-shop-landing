@@ -14,6 +14,7 @@ import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
 import { setFilePath } from "@/lib/media";
 import Image from "next/image";
 import { formatPrice } from "@/lib/number";
+import Link from "next/link";
 
 const PrimaryProductCard = ({ product }) => {
   const theme = useTheme();
@@ -31,8 +32,14 @@ const PrimaryProductCard = ({ product }) => {
     setFilePath(product.media?.[0]?.path) ||
     "https://via.placeholder.com/400x400?text=No+Image";
 
+  const handleChangeCart = async () => {
+    console.log("CART CHANGED");
+  };
+
   return (
     <Card
+      component={Link}
+      href={`/products/${product.slug}`}
       sx={{
         position: "relative",
         display: "flex",
@@ -154,8 +161,8 @@ const PrimaryProductCard = ({ product }) => {
             WebkitLineClamp: 2,
             WebkitBoxOrient: "vertical",
             overflow: "hidden",
-             whiteSpace: "nowrap",
-            textOverflow: "ellipsis"
+            whiteSpace: "nowrap",
+            textOverflow: "ellipsis",
           }}
         >
           {product.excerpt}
@@ -190,6 +197,11 @@ const PrimaryProductCard = ({ product }) => {
           variant="contained"
           color={inStock ? "primary" : "inherit"}
           disabled={!inStock}
+          onClick={(e) => {
+            e.preventDefault();
+            e.stopPropagation();
+            handleChangeCart();
+          }}
           sx={{
             color: inStock
               ? theme.palette.primary.contrastText
