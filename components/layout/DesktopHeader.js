@@ -79,8 +79,8 @@ export default function DesktopHeader() {
               }}
             >
               <Image
-                src={setFilePath(general.logo.path)}
-                alt={general.name}
+                src={setFilePath(general?.logo?.path)}
+                alt={general?.name}
                 width={64}
                 height={64}
                 unoptimized
@@ -90,7 +90,7 @@ export default function DesktopHeader() {
               />
 
               <Typography mr={1} fontWeight="bold" fontSize="1.2rem">
-                {general.name}
+                {general?.name}
               </Typography>
             </Link>
 

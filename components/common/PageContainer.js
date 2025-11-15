@@ -12,14 +12,31 @@ import { Container, Grid } from "@mui/material";
 
 const PageHeaderBreadcrumbs = styled(Breadcrumbs)(({ theme }) => ({
   margin: theme.spacing(1, 0),
+
+  // Separator style
   [`& .${breadcrumbsClasses.separator}`]: {
     color: (theme.vars || theme).palette.action.disabled,
     margin: 1,
   },
+
+  // Make breadcrumb list horizontal + scrollable
   [`& .${breadcrumbsClasses.ol}`]: {
+    display: "flex",
+    flexWrap: "nowrap",        // stay on one line
+    whiteSpace: "nowrap",        // stay on one line
+    overflowX: "auto",         // horizontal scroll
+    scrollbarWidth: "none",    // Firefox
+    msOverflowStyle: "none",   // IE/Edge
     alignItems: "center",
   },
+
+
+  // Hide scrollbar (WebKit)
+  [`& .${breadcrumbsClasses.ol}::-webkit-scrollbar`]: {
+    display: "none",
+  },
 }));
+
 
 
 function PageContainer(props) {

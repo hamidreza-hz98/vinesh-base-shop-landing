@@ -1,3 +1,5 @@
+import { setFilePath } from "@/lib/media";
+
 export const productsSliderOptions = {
   breakpoints: {
     0: {
@@ -22,3 +24,4 @@ export const productsSliderOptions = {
   navigation: false,
   pagination: false,
 };
+

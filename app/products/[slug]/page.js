@@ -1,9 +1,11 @@
 import ProductDetailsPageWrapper from '@/components/wrappers/ProductDetailsPageWrapper'
 import React from 'react'
 
-const page = () => {
+const page = async ({ params }) => {
+  const {slug} = await params
+  
   return (
-    <ProductDetailsPageWrapper />
+    <ProductDetailsPageWrapper slug={slug} />
   )
 }
 

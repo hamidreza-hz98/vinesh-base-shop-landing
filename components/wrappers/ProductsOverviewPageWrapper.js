@@ -113,14 +113,14 @@ const ProductsOverviewPageWrapper = () => {
             </Grid>
 
             {/* ✅ Product Grid */}
-            {products.products.map((product, index) => (
+            {products?.products?.map((product, index) => (
               <Grid key={index} size={{ xs: 12, sm: 6, lg: 4 }}>
                 <PrimaryProductCard product={product} />
               </Grid>
             ))}
 
             <Grid display="flex" alignItems="center" justifyContent="center" size={{ xs: 12 }}>
-              <CustomPagination page={page} page_size={page_size} total={products.total} />
+              <CustomPagination page={page} page_size={page_size} total={products?.total} />
             </Grid>
           </Grid>
         </Grid>

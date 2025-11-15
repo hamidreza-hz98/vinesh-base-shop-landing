@@ -83,8 +83,8 @@ export default function MobileHeader() {
           }}
         >
           <Image
-            src={setFilePath(general.logo.path)}
-            alt={general.name}
+            src={setFilePath(general?.logo?.path)}
+            alt={general?.name}
             width={48}
             height={48}
             unoptimized
@@ -94,7 +94,7 @@ export default function MobileHeader() {
           />
 
           <Typography mr={1} fontWeight="bold" fontSize="1.2rem">
-            {general.name}
+            {general?.name}
           </Typography>
         </Link>
 

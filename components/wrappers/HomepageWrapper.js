@@ -61,7 +61,6 @@ const HomepageWrapper = () => {
     fetchProducts();
   }, [dispatch]);
 
-  console.log(mostSoldProducts);
 
   if (
     !general ||
