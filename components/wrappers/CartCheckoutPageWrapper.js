@@ -1,11 +1,21 @@
-"use client"
+"use client";
 
-import React from 'react'
+import { Stack } from "@mui/material";
+import React from "react";
+import InCartProductCard from "../cards/InCartProductCard";
+import { useSelector } from "react-redux";
+import { selectCart } from "@/store/cart/cart.selector";
 
 const CartCheckoutPageWrapper = () => {
-  return (
-    <div>CartCheckoutPageWrapper</div>
-  )
-}
+  const cart = useSelector(selectCart)
 
-export default CartCheckoutPageWrapper
+  return (
+    <Stack spacing={2}>
+      {cart?.products?.map(({ product, quantity }, index) => (
+        <InCartProductCard key={index} quantity={quantity} product={product} />
+      ))}
+    </Stack>
+  );
+};
+
+export default CartCheckoutPageWrapper;

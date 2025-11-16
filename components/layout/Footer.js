@@ -14,11 +14,14 @@ import { setRequestQuery } from "@/lib/request";
 import { getSettings } from "@/store/settings/settings.actions";
 import { selectSettings } from "@/store/settings/settings.selector";
 import { getAllBrands } from "@/store/brand/brand.action";
+import nookies from "nookies"
+import { createCart, getCart, getCustomerCart } from "@/store/cart/cart.action";
 
 export default function Footer() {
   const dispatch = useDispatch();
   const { categories } = useSelector(selectCategories);
   const settings = useSelector(selectSettings)
+  const { cart, customer} = nookies.get()
 
   useEffect(() => {
     const body = setRequestQuery({
@@ -34,6 +37,14 @@ export default function Footer() {
     dispatch(getAllBrands(setRequestQuery({ page_size: 100 })));
 
     dispatch(getSettings("general"))
+
+    if(cart){
+      dispatch(getCart(cart))
+    } else if (customer) {
+      dispatch(getCustomerCart(customer))
+    } else {
+      dispatch(createCart())
+    }
   }, [
     // categories,
     dispatch,

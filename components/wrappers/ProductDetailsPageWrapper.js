@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/rules-of-hooks */
 "use client";
 
 import { getProductDetails } from "@/store/product/product.action";
@@ -12,6 +13,7 @@ import {
   Button,
   Divider,
   Grid,
+  IconButton,
   Stack,
   Tab,
   Tabs,
@@ -23,11 +25,18 @@ import Slider from "../common/Slider";
 import { setFilePath, setFullscreenImages } from "@/lib/media";
 import Image from "next/image";
 import FullscreenImage from "../common/FullScreenImage";
-import { formatPrice } from "@/lib/number";
+import { formatPrice, toPersian } from "@/lib/number";
 import { InsertEmoticon } from "@mui/icons-material";
 import Link from "next/link";
 import { productsSliderOptions } from "@/constants/slider-options";
 import PrimaryProductCard from "../cards/PrimaryProductCard";
+import { updateCart } from "@/store/cart/cart.action";
+import { selectCart } from "@/store/cart/cart.selector";
+import nookies from "nookies";
+import useNotifications from "@/hooks/useNotifications/useNotifications";
+import AddIcon from "@mui/icons-material/Add";
+import RemoveIcon from "@mui/icons-material/Remove";
+import DeleteOutlineIcon from "@mui/icons-material/DeleteOutline";
 
 function TabPanel({ children, value, index }) {
   return (
@@ -41,13 +50,16 @@ const ProductDetailsPageWrapper = ({ slug }) => {
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
   const dispatch = useDispatch();
+  const notifications = useNotifications();
+  const { customer } = nookies.get();
+  const cart = useSelector(selectCart);
 
   const [fullscreenData, setFullscreenData] = useState({
     open: false,
     slides: [],
     initialIndex: 0,
   });
-
+  const [isInCart, setIsInCart] = useState(null);
   const [tabsValue, setTabsValue] = useState(0);
 
   const handleTabChange = (event, newValue) => {
@@ -114,9 +126,63 @@ const ProductDetailsPageWrapper = ({ slug }) => {
     ? product.price - product.discount
     : product.price;
 
-  const handleChangeCart = async () => {
-    console.log("CART CHANGED");
+  const handleAddToCart = async () => {
+    try {
+      const { message } = await dispatch(
+        updateCart({
+          _id: cart._id,
+          options: {
+            customerId: customer || null,
+            action: "add",
+            productId: product._id,
+          },
+        })
+      ).unwrap();
+
+      notifications.show(message || "سبد خرید با موفقیت ویرایش شد!", {
+        severity: "success",
+        autoHideDuration: 3000,
+      });
+    } catch (error) {
+      notifications.show(error, {
+        severity: "error",
+        autoHideDuration: 3000,
+      });
+    }
   };
+
+  const handleRemoveFromcart = async () => {
+    try {
+      const { message } = await dispatch(
+        updateCart({
+          _id: cart._id,
+          options: {
+            customerId: customer || null,
+            action: isInCart.quantity > 1 ? "decrease" : "remove",
+            productId: product._id,
+          },
+        })
+      ).unwrap();
+
+       notifications.show(message || "سبد خرید با موفقیت ویرایش شد!", {
+        severity: "success",
+        autoHideDuration: 3000,
+      });
+    } catch (error) {
+      notifications.show(error, {
+        severity: "error",
+        autoHideDuration: 3000,
+      });
+    }
+  };
+
+  useEffect(() => {
+    const updatedCart = cart?.products?.find(
+      (item) => item.product === product?._id
+    );
+
+    setIsInCart(updatedCart);
+  }, [cart, product]);
 
   return (
     <PageContainer
@@ -185,24 +251,69 @@ const ProductDetailsPageWrapper = ({ slug }) => {
             </Typography>
           )}
 
-          <Button
-            fullWidth
-            variant="contained"
-            color={inStock ? "primary" : "inherit"}
-            disabled={!inStock}
-            onClick={handleChangeCart}
-            sx={{
-              color: inStock
-                ? theme.palette.primary.contrastText
-                : theme.palette.text.disabled,
-              fontWeight: 700,
-              borderRadius: 2,
-              py: 1,
-              mt: 2,
-            }}
-          >
-            افزودن به سبد
-          </Button>
+          {isInCart ? (
+            <Box
+              display="flex"
+              alignItems="center"
+              justifyContent="space-between"
+              mt={2}
+            >
+              <Typography variant="h4">تعداد در سبد خرید شما:</Typography>
+
+              <Box display="flex" alignItems="center" justifyContent="flex-end">
+                <IconButton
+                  sx={{
+                    color: theme.palette.primary.contrastText,
+                    backgroundColor: theme.palette.primary.main,
+                    mx: 1,
+                    "&:hover": {
+                      color: theme.palette.primary.main,
+                    },
+                  }}
+                  size="small"
+                  onClick={handleAddToCart}
+                >
+                  <AddIcon />
+                </IconButton>
+
+                <Typography mx={1}>{toPersian(isInCart.quantity)}</Typography>
+
+                <IconButton
+                  sx={{
+                    color: theme.palette.primary.contrastText,
+                    backgroundColor: theme.palette.primary.main,
+                    mx: 1,
+                    "&:hover": {
+                      color: theme.palette.primary.main,
+                    },
+                  }}
+                  size="small"
+                  onClick={handleRemoveFromcart}
+                >
+                  {isInCart.quantity === 1 ? <DeleteOutlineIcon /> : <RemoveIcon />}
+                </IconButton>
+              </Box>
+            </Box>
+          ) : (
+            <Button
+              fullWidth
+              variant="contained"
+              color={inStock ? "primary" : "inherit"}
+              disabled={!inStock}
+              onClick={handleAddToCart}
+              sx={{
+                color: inStock
+                  ? theme.palette.primary.contrastText
+                  : theme.palette.text.disabled,
+                fontWeight: 700,
+                borderRadius: 2,
+                py: 1,
+                mt: 2,
+              }}
+            >
+              افزودن به سبد
+            </Button>
+          )}
 
           {product?.shortSpecifications &&
             product?.shortSpecifications.length !== 0 && (
@@ -300,7 +411,9 @@ const ProductDetailsPageWrapper = ({ slug }) => {
           {product?.relatedProducts &&
             product?.relatedProducts.length !== 0 && (
               <>
-                <Typography variant="h2" mt={6}>محصولات مرتبط</Typography>
+                <Typography variant="h2" mt={6}>
+                  محصولات مرتبط
+                </Typography>
 
                 <Slider
                   options={{

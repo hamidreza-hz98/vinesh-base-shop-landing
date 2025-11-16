@@ -12,8 +12,6 @@ import { Box } from "@mui/material";
 
 const Slider = ({ options }) => {
   const [thumbsSwiper, setThumbsSwiper] = useState(null);
-  console.log(options.breakpoints);
-  
 
   return (
     <>

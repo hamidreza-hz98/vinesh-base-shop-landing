@@ -7,6 +7,25 @@ export default function getComponents(theme) {
   const { palette, typography, shape } = theme;
 
   return {
+    MuiStep: {
+      styleOverrides: {
+        root: {
+          padding: 0,
+        },
+      },
+    },
+    MuiStepLabel: {
+      styleOverrides: {
+        labelContainer: {
+          marginRight: 8, // this targets the container of the label
+        },
+
+        iconContainer: {
+          padding: 0,
+        },
+      },
+    },
+
     MuiCssBaseline: {
       styleOverrides: {
         body: {
@@ -76,7 +95,7 @@ export default function getComponents(theme) {
           direction: "rtl", // entire TextField is RTL
           "& .MuiInputBase-root": {
             direction: "rtl", // input content RTL
-            border: `1px solid ${theme.palette.primary.dark}`
+            border: `1px solid ${theme.palette.primary.dark}`,
           },
           "& .MuiInputLabel-root": {
             right: 28,

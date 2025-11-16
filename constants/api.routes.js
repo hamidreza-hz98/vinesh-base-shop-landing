@@ -55,3 +55,11 @@ export const getSettingsApi = (section) =>
   `${process.env.NEXT_PUBLIC_BASE_URL}/settings/${section}`;
 
 export const modifySettingsApi = `${process.env.NEXT_PUBLIC_BASE_URL}/settings`;
+
+export const cartApi = `${process.env.NEXT_PUBLIC_BASE_URL}/cart`
+
+export const modifyCartApi = _id => `${process.env.NEXT_PUBLIC_BASE_URL}/cart/update/${_id}`
+
+export const getCartApi = (_id) => `${process.env.NEXT_PUBLIC_BASE_URL}/cart/details/${_id}`
+
+export const getCustomerCartApi = (customerId) => `${process.env.NEXT_PUBLIC_BASE_URL}/cart/${customerId}`

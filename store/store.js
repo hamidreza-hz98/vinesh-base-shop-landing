@@ -11,6 +11,7 @@ import categoryReducer from "./category/category.slice";
 import productReducer from "./product/product.slice";
 import customerReducer from "./customer/customer.slice";
 import settingsReducer from "./settings/settings.slice";
+import cartReducer from "./cart/cart.slice";
 
 const createNoopStorage = () => {
   return {
@@ -38,6 +39,7 @@ const rootReducer = combineReducers({
   product: productReducer,
   customer: customerReducer,
   settings: settingsReducer,
+  cart: cartReducer,
 });
 
 const persistConfig = {
@@ -45,7 +47,8 @@ const persistConfig = {
   storage,
   whitelist: [
     // "category",
-     "settings"
+     "settings",
+     "cart"
     ],
 };
 

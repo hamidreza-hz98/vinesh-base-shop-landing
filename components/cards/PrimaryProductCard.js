@@ -1,6 +1,7 @@
+/* eslint-disable react-hooks/set-state-in-effect */
 "use client";
 
-import React from "react";
+import React, { useEffect, useState } from "react";
 import {
   Box,
   Card,
@@ -13,11 +14,26 @@ import {
 import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
 import { setFilePath } from "@/lib/media";
 import Image from "next/image";
-import { formatPrice } from "@/lib/number";
+import { formatPrice, toPersian } from "@/lib/number";
 import Link from "next/link";
+import { useDispatch, useSelector } from "react-redux";
+import useNotifications from "@/hooks/useNotifications/useNotifications";
+import { updateCart } from "@/store/cart/cart.action";
+import { selectCart } from "@/store/cart/cart.selector";
+import nookies from "nookies";
+import AddIcon from "@mui/icons-material/Add";
+import RemoveIcon from "@mui/icons-material/Remove";
+import DeleteOutlineIcon from "@mui/icons-material/DeleteOutline";
 
 const PrimaryProductCard = ({ product }) => {
   const theme = useTheme();
+
+  const dispatch = useDispatch();
+  const notifications = useNotifications();
+  const { customer } = nookies.get();
+  const cart = useSelector(selectCart);
+
+  const [isInCart, setIsInCart] = useState(null);
 
   const hasDiscount = product.discount > 0;
   const inStock = product.stock > 0;
@@ -32,9 +48,64 @@ const PrimaryProductCard = ({ product }) => {
     setFilePath(product.media?.[0]?.path) ||
     "https://via.placeholder.com/400x400?text=No+Image";
 
-  const handleChangeCart = async () => {
-    console.log("CART CHANGED");
+  const handleAddToCart = async () => {
+    try {
+      const { message } = await dispatch(
+        updateCart({
+          _id: cart._id,
+          options: {
+            customerId: customer || null,
+            action: "add",
+            productId: product._id,
+          },
+        })
+      ).unwrap();
+
+      notifications.show(message || "سبد خرید با موفقیت ویرایش شد!", {
+        severity: "success",
+        autoHideDuration: 3000,
+      });
+    } catch (error) {
+      notifications.show(error, {
+        severity: "error",
+        autoHideDuration: 3000,
+      });
+    }
   };
+
+  const handleRemoveFromcart = async () => {
+    try {
+      const { message } = await dispatch(
+        updateCart({
+          _id: cart._id,
+          options: {
+            customerId: customer || null,
+            action: isInCart.quantity > 1 ? "decrease" : "remove",
+            productId: product._id,
+          },
+        })
+      ).unwrap();
+
+      notifications.show(message || "سبد خرید با موفقیت ویرایش شد!", {
+        severity: "success",
+        autoHideDuration: 3000,
+      });
+    } catch (error) {
+      notifications.show(error, {
+        severity: "error",
+        autoHideDuration: 3000,
+      });
+    }
+  };
+
+    useEffect(() => {
+      const updatedCart = cart?.products?.find(
+        (item) => item.product === product?._id
+      );
+  
+      setIsInCart(updatedCart);
+    }, [cart]);
+  
 
   return (
     <Card
@@ -191,29 +262,85 @@ const PrimaryProductCard = ({ product }) => {
       </CardContent>
 
       {/* 🛒 Action Buttons */}
-      <Box sx={{ display: "flex", alignItems: "center", gap: 1, mt: 1 }}>
-        <Button
-          fullWidth
-          variant="contained"
-          color={inStock ? "primary" : "inherit"}
-          disabled={!inStock}
-          onClick={(e) => {
-            e.preventDefault();
-            e.stopPropagation();
-            handleChangeCart();
-          }}
-          sx={{
-            color: inStock
-              ? theme.palette.primary.contrastText
-              : theme.palette.text.disabled,
-            fontWeight: 700,
-            borderRadius: 2,
-            py: 1,
-          }}
-        >
-          افزودن به سبد
-        </Button>
-      </Box>
+        {isInCart ? (
+          <Box
+            display="flex"
+            alignItems="center"
+            justifyContent="space-between"
+            mt={2}
+          >
+            <Typography variant="body1">تعداد در سبد خرید شما:</Typography>
+
+            <Box display="flex" alignItems="center" justifyContent="flex-end">
+              <IconButton
+                sx={{
+                  color: theme.palette.primary.contrastText,
+                  backgroundColor: theme.palette.primary.main,
+                  mx: 1,
+                  "&:hover": {
+                    color: theme.palette.primary.main,
+                  },
+                }}
+                size="small"
+                onClick={(e) => {
+                  e.preventDefault();
+                  e.stopPropagation();
+                  handleAddToCart();
+                }}
+              >
+                <AddIcon />
+              </IconButton>
+
+              <Typography mx={1}>{toPersian(isInCart.quantity)}</Typography>
+
+              <IconButton
+                sx={{
+                  color: theme.palette.primary.contrastText,
+                  backgroundColor: theme.palette.primary.main,
+                  mx: 1,
+                  "&:hover": {
+                    color: theme.palette.primary.main,
+                  },
+                }}
+                size="small"
+                onClick={(e) => {
+                  e.preventDefault();
+                  e.stopPropagation();
+                  handleRemoveFromcart();
+                }}
+              >
+                {isInCart.quantity === 1 ? (
+                  <DeleteOutlineIcon />
+                ) : (
+                  <RemoveIcon />
+                )}
+              </IconButton>
+            </Box>
+          </Box>
+        ) : (
+          <Button
+            fullWidth
+            variant="contained"
+            color={inStock ? "primary" : "inherit"}
+            disabled={!inStock}
+            onClick={(e) => {
+              e.preventDefault();
+              e.stopPropagation();
+              handleAddToCart();
+            }}
+            sx={{
+              color: inStock
+                ? theme.palette.primary.contrastText
+                : theme.palette.text.disabled,
+              fontWeight: 700,
+              borderRadius: 2,
+              py: 1,
+              mt: 2,
+            }}
+          >
+            افزودن به سبد
+          </Button>
+        )}
     </Card>
   );
 };

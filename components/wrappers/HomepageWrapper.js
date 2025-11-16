@@ -40,7 +40,6 @@ const HomepageWrapper = () => {
             })
           )
         ).unwrap();
-        console.log(mostSoldResponse);
 
         setMostSoldProducts(mostSoldResponse.products);
 
