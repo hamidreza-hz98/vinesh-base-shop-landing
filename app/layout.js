@@ -7,6 +7,7 @@ import Footer from "@/components/layout/Footer";
 import { Box } from "@mui/material";
 import MobileBottomNav from "@/components/layout/MobileBottomNav";
 import DialogsProvider from "@/hooks/useDialogs/DialogsProvider";
+import NotificationsProvider from "@/hooks/useNotifications/NotificationsProvider";
 
 export const metadata = {
   title: "Create Next App",
@@ -19,15 +20,16 @@ export default function RootLayout({ children }) {
       <body>
         <StoreProvider>
           <AppThemeProvider>
-            <DialogsProvider>
+            <NotificationsProvider>
+              <DialogsProvider>
+                <DesktopHeader />
+                <MobileHeader />
 
-            <DesktopHeader />
-            <MobileHeader />
-
-            <Box component="main">{children}</Box>
-            <Footer />
-            <MobileBottomNav />
-            </DialogsProvider>
+                <Box component="main">{children}</Box>
+                <Footer />
+                <MobileBottomNav />
+              </DialogsProvider>
+            </NotificationsProvider>
           </AppThemeProvider>
         </StoreProvider>
       </body>

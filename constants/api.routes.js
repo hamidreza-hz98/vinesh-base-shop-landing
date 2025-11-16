@@ -1,4 +1,3 @@
-
 export const uploadMediaApi = `${process.env.NEXT_PUBLIC_BASE_URL}/media/upload`;
 
 export const getAllMediaApi = (query) =>
@@ -48,16 +47,9 @@ export const modifyProductApi = (id) =>
 export const getAllProductsApi = (query) =>
   `${process.env.NEXT_PUBLIC_BASE_URL}/product?${query}`;
 
-export const createCustomerApi = `${process.env.NEXT_PUBLIC_BASE_URL}/customer`;
+export const loginApi = `${process.env.NEXT_PUBLIC_BASE_URL}/customer/login`;
 
-export const modifyCustomerApi = (id) =>
-  `${process.env.NEXT_PUBLIC_BASE_URL}/customer/${id}`;
-
-export const getAllCustomersApi = (query) =>
-  `${process.env.NEXT_PUBLIC_BASE_URL}/customer?${query}`;
-
-export const customerDetailsApi = (query) =>
-  `${process.env.NEXT_PUBLIC_BASE_URL}/customer/details?${query}`;
+export const signupApi = `${process.env.NEXT_PUBLIC_BASE_URL}/customer/signup`;
 
 export const getSettingsApi = (section) =>
   `${process.env.NEXT_PUBLIC_BASE_URL}/settings/${section}`;

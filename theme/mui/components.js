@@ -76,6 +76,7 @@ export default function getComponents(theme) {
           direction: "rtl", // entire TextField is RTL
           "& .MuiInputBase-root": {
             direction: "rtl", // input content RTL
+            border: `1px solid ${theme.palette.primary.dark}`
           },
           "& .MuiInputLabel-root": {
             right: 28,

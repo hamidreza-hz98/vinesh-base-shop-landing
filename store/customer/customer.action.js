@@ -1,82 +1,64 @@
-import {
-  createCustomerApi,
-  getAllCustomersApi,
-  modifyCustomerApi,
-  customerDetailsApi,
-} from "@/constants/api.routes";
+import { loginApi, signupApi } from "@/constants/api.routes";
 import { fetchWithAuth } from "@/lib/fetch";
 import { createAsyncThunk } from "@reduxjs/toolkit";
+import { setCookie } from "nookies";
 
-export const createCustomer = createAsyncThunk(
-  "customer/createCustomer",
+export const login = createAsyncThunk(
+  "customer/login",
   async (body, { rejectWithValue }) => {
     try {
-      const { message } = await fetchWithAuth(createCustomerApi, {
+      const { data, message } = await fetchWithAuth(loginApi, {
         method: "POST",
         body,
       });
 
+      const { token, customer } = data;
+
+      setCookie(null, "token", token, {
+        maxAge: 365 * 30 * 24 * 60 * 60,
+        path: "/",
+        sameSite: "lax",
+      });
+
+      setCookie(null, "customer", customer._id, {
+        maxAge: 365 * 30 * 24 * 60 * 60,
+        path: "/",
+        sameSite: "lax",
+      });
+
       return message;
     } catch (error) {
-      rejectWithValue(error.message);
+      return rejectWithValue(error.message || "مشکلی پیش آمد.");
     }
   }
 );
 
-export const updateCustomer = createAsyncThunk(
-  "customer/updateCustomer",
-  async ({ _id, body }, { rejectWithValue }) => {
+export const signup = createAsyncThunk(
+  "customer/signup",
+  async (body, { rejectWithValue }) => {
     try {
-      const { message } = await fetchWithAuth(modifyCustomerApi(_id), {
-        method: "PUT",
+      const { data, message } = await fetchWithAuth(signupApi, {
+        method: "POST",
         body,
       });
 
-      return message
-    } catch (error) {
-      rejectWithValue(error.message);
-    }
-  }
-);
+      const { token, customer } = data;
 
-export const getAllCustomers = createAsyncThunk(
-  "customer/getAllCustomers",
-  async (query, { rejectWithValue }) => {
-    try {
-      const  { data }  = await fetchWithAuth(getAllCustomersApi(query));
-      
-      return data;
-    } catch (error) {
-      rejectWithValue(error.message);
-    }
-  }
-);
+      setCookie(null, "token", token, {
+        maxAge: 365 * 30 * 24 * 60 * 60,
+        path: "/",
+        sameSite: "lax",
+      });
 
-export const getCustomerDetails = createAsyncThunk(
-  "customer/getCustomerDetails",
-  async (query, { rejectWithValue }) => {
-    
-    try {
-      const { data } = await fetchWithAuth(customerDetailsApi(query));
-
-      return data;
-    } catch (error) {
-      rejectWithValue(error.message);
-    }
-  }
-);
-
-export const deleteCustomer = createAsyncThunk(
-  "customer/deleteCustomer",
-  async (_id, { rejectWithValue }) => {
-    try {
-      const { message } = await fetchWithAuth(modifyCustomerApi(_id), {
-        method: "DELETE",
+      setCookie(null, "customer", customer._id, {
+        maxAge: 365 * 30 * 24 * 60 * 60,
+        path: "/",
+        sameSite: "lax",
       });
 
       return message;
     } catch (error) {
-      rejectWithValue(error.message);
+      return rejectWithValue(error.message || "مشکلی پیش آمد.");
     }
   }
 );
