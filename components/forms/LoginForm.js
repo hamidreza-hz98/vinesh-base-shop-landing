@@ -20,7 +20,7 @@ import { login } from "@/store/customer/customer.action";
 import routes from "@/constants/landing.routes";
 import { useRouter } from "next/navigation";
 
-const LoginForm = ({ onSwitch }) => {
+const LoginForm = ({ onSwitch, onSuccess }) => {
   const [showPassword, setShowPassword] = useState(false);
 
     const dispatch = useDispatch();
@@ -45,7 +45,7 @@ const LoginForm = ({ onSwitch }) => {
         autoHideDuration: 3000,
       });
 
-      router.push(routes.profile.link)
+      onSuccess?.()
     } catch (error) {
       notifications.show(error, {
         severity: "error",

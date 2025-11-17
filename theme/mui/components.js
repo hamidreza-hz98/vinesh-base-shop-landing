@@ -122,9 +122,16 @@ export default function getComponents(theme) {
 
     MuiOutlinedInput: {
       styleOverrides: {
+        root: {
+          "&.MuiAutocomplete-inputRoot": {
+            "& input": {
+              paddingRight: "8px !important", // remove right padding
+            },
+          },
+        },
         notchedOutline: {
           textAlign: "right",
-          paddingRight: "8px", // make the legend appear at right
+          paddingRight: "8px !important", // make the legend appear at right
           paddingLeft: "0px",
         },
       },

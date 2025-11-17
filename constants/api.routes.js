@@ -63,3 +63,8 @@ export const modifyCartApi = _id => `${process.env.NEXT_PUBLIC_BASE_URL}/cart/up
 export const getCartApi = (_id) => `${process.env.NEXT_PUBLIC_BASE_URL}/cart/details/${_id}`
 
 export const getCustomerCartApi = (customerId) => `${process.env.NEXT_PUBLIC_BASE_URL}/cart/${customerId}`
+
+export const modifyAddressApi = (_id) => `${process.env.NEXT_PUBLIC_BASE_URL}/address/${_id}`
+
+export const addressApi = `${process.env.NEXT_PUBLIC_BASE_URL}/address`
+

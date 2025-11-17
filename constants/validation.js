@@ -19,3 +19,13 @@ export const signupFormValidationSchema = yup.object({
     .required("شماره همراه الزامی است."),
   password: yup.string().required("رمز عبور الزامی است."),
 });
+
+export const addressFormValidationSchema = yup.object().shape({
+    name: yup.string().required("نام آدرس الزامی است"),
+    recipientName: yup.string(),
+    recipientPhone: yup.string().matches(iranPhoneRegex, "شماره همراه معتبر نیست."),
+    address: yup.string().required("آدرس الزامی است"),
+    zipCode: yup.string().length(10, "کد پستی باید 10 رقم باشد.").required("کد پستی الزامی است"),
+    province: yup.string().required("استان الزامی است"),
+    city: yup.string().required("شهر الزامی است"),
+  });

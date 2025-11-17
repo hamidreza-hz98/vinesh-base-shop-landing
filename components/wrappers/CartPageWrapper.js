@@ -10,7 +10,7 @@ import {
   Typography,
   useTheme,
 } from "@mui/material";
-import React from "react";
+import React, { useState } from "react";
 import PageContainer from "../common/PageContainer";
 import CartCheckoutPageWrapper from "./CartCheckoutPageWrapper";
 import CartShipmentPageWrapper from "./CartShipmentPageWrapper";
@@ -19,6 +19,9 @@ import { calculateFinalPrice, formatPrice, toPersian } from "@/lib/number";
 import { useSelector } from "react-redux";
 import { selectCart, selectCartLoading } from "@/store/cart/cart.selector";
 import Loader from "../common/Loader";
+import AuthenticationDrawer from "../drawers/AuthenticationDrawer";
+import nookies from "nookies";
+import useNotifications from "@/hooks/useNotifications/useNotifications";
 
 const PersianStepIcon = (props) => {
   const { icon, active, completed } = props;
@@ -45,30 +48,56 @@ const PersianStepIcon = (props) => {
   );
 };
 
-
-
 const CartPageWrapper = () => {
-  const [activeStep, setActiveStep] = React.useState(0);
-  const theme = useTheme();
-    const loading = useSelector(selectCartLoading)
+  const [activeStep, setActiveStep] = useState(0);
+  const [openAuth, setOpenAuth] = useState(false);
+  const [authCompleted, setAuthCompleted] = useState(false);
 
-    
-    const cart = useSelector(selectCart)
-    
-    
-  if(!cart || loading) {
-    return <Loader />
+  const theme = useTheme();
+  const loading = useSelector(selectCartLoading);
+  const { customer } = nookies.get();
+
+  const notifications = useNotifications();
+
+  const cart = useSelector(selectCart);
+
+  if (!cart || loading) {
+    return <Loader />;
   }
 
-const steps = ["سبد خرید", "مشخصات ارسال", "پرداخت"];
-const stepNextButtonLabel = [ "انتخاب روش ارسال", "نهایی سازی سفارش", "پرداخت سفارش" ]
-const StepComponents = [
-  <CartCheckoutPageWrapper key={0} />,
-  <CartShipmentPageWrapper key={1} />,
-  <CartFinalizePageWrapper key={2} />,
-];
+  const steps = ["سبد خرید", "مشخصات ارسال", "پرداخت"];
+  const stepNextButtonLabel = [
+    "انتخاب روش ارسال",
+    "نهایی سازی سفارش",
+    "پرداخت سفارش",
+  ];
+  const StepComponents = [
+    <CartCheckoutPageWrapper key={0} />,
+    <CartShipmentPageWrapper key={1} />,
+    <CartFinalizePageWrapper key={2} />,
+  ];
 
   const handleNext = () => {
+    if (activeStep === 0 && !customer) {
+      setOpenAuth(true);
+      return;
+    }
+
+    if (activeStep === 0 && authCompleted) {
+      setAuthCompleted(false);
+      setActiveStep((prev) => prev + 1);
+      return;
+    }
+
+    if (activeStep === 1 && !cart?.address) {
+      notifications.show("لطفا آدرس را انتخاب کنید.", {
+        severity: "error",
+        autoHideDuration: 3000,
+      });
+
+      return;
+    }
+
     setActiveStep((prevActiveStep) => prevActiveStep + 1);
   };
 
@@ -97,76 +126,103 @@ const StepComponents = [
           <Grid size={{ xs: 12, md: 8 }}>{StepComponents[activeStep]}</Grid>
 
           <Grid size={{ xs: 12, md: 4 }}>
-            <Box sx={{ display: "flex", flexDirection: "column", p: 2, height: "100%", backgroundColor: theme.palette.background.paper, borderRadius: 2 }}>
-              <Box display="flex" alignItems="center" justifyContent="space-between">
-                <Typography variant="body2">
-                  قیمت محصولات
-                </Typography>
-              
-                <Typography variant="body1">
-                  {
-                    formatPrice(cart?.price?.products)
-                  }{" "}
-                  تومان
-                </Typography>
+            <Box
+              sx={{
+                display: "flex",
+                flexDirection: "column",
+                justifyContent: "space-between",
+                p: 2,
+                height: "100%",
+                maxHeight: "280px",
+                backgroundColor: theme.palette.background.paper,
+                borderRadius: 2,
+              }}
+            >
+              <Box>
+                <Box
+                  display="flex"
+                  alignItems="center"
+                  justifyContent="space-between"
+                >
+                  <Typography variant="body2">قیمت محصولات</Typography>
+
+                  <Typography variant="body1">
+                    {formatPrice(cart?.price?.products)} تومان
+                  </Typography>
+                </Box>
+
+                <Box
+                  display="flex"
+                  alignItems="center"
+                  justifyContent="space-between"
+                >
+                  <Typography variant="body2">هزینه ارسال</Typography>
+
+                  <Typography variant="body1">
+                    {formatPrice(cart?.price?.shipment)} تومان
+                  </Typography>
+                </Box>
+
+                <Box
+                  display="flex"
+                  alignItems="center"
+                  justifyContent="space-between"
+                  color={theme.palette.success.light}
+                >
+                  <Typography variant="body2">تخفیف</Typography>
+
+                  <Typography variant="body1">
+                    {formatPrice(cart?.price?.discounts)} تومان
+                  </Typography>
+                </Box>
+
+                <Box
+                  display="flex"
+                  alignItems="center"
+                  justifyContent="space-between"
+                  color={theme.palette.primary.main}
+                >
+                  <Typography variant="h5">قیمت نهایی</Typography>
+
+                  <Typography variant="h5">
+                    {formatPrice(calculateFinalPrice(cart?.price))} تومان
+                  </Typography>
+                </Box>
               </Box>
 
-              <Box display="flex" alignItems="center" justifyContent="space-between">
-                <Typography variant="body2">
-                  هزینه ارسال
-                </Typography>
-              
-                <Typography variant="body1">
-                  {
-                    formatPrice(cart?.price?.shipment)
-                  }{" "}
-                  تومان
-                </Typography>
-              </Box>
+              <Box>
+                <Button
+                  variant="contained"
+                  fullWidth
+                  onClick={handleNext}
+                  sx={{ mt: 2 }}
+                >
+                  {stepNextButtonLabel[activeStep]}
+                </Button>
 
-              <Box display="flex" alignItems="center" justifyContent="space-between" color={theme.palette.success.light}>
-                <Typography variant="body2">
-                 تخفیف
-                </Typography>
-              
-                <Typography variant="body1">
-                  {
-                    formatPrice(cart?.price?.discounts)
-                  }{" "}
-                  تومان
-                </Typography>
+                <Button
+                  variant="outlined"
+                  fullWidth
+                  disabled={activeStep === 0}
+                  onClick={handleBack}
+                  sx={{ mt: 2 }}
+                >
+                  بازگشت
+                </Button>
               </Box>
-              
-              <Box display="flex" alignItems="center" justifyContent="space-between" color={theme.palette.primary.main}>
-                <Typography variant="h5">
-                 قیمت نهایی
-                </Typography>
-              
-                <Typography variant="h5">
-                  {
-                    formatPrice(calculateFinalPrice(cart?.price))
-                  }{" "}
-                  تومان
-                </Typography>
-              </Box>
-              
-              <Button variant="contained" fullWidth onClick={handleNext} sx={{ mt: 2}}>
-                {stepNextButtonLabel[activeStep]}
-              </Button>
-
-              <Button
-                variant="outlined"
-                fullWidth
-                disabled={activeStep === 0}
-                onClick={handleBack}
-                sx={{mt:1}}
-              >
-                بازگشت
-              </Button>
             </Box>
           </Grid>
         </Grid>
       }
+
+      <AuthenticationDrawer
+        open={openAuth}
+        onClose={() => setOpenAuth(false)}
+        onAuthenticated={() => {
+          setAuthCompleted(true);
+          setOpenAuth(false);
+        }}
+      />
     </PageContainer>
   );
 };

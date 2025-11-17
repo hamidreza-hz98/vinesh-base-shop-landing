@@ -1,8 +1,5 @@
 import { combineReducers, configureStore } from "@reduxjs/toolkit";
-import {
-  persistReducer,
-  persistStore,
-} from "redux-persist";
+import { persistReducer, persistStore } from "redux-persist";
 import createWebStorage from "redux-persist/lib/storage/createWebStorage";
 
 import brandReducer from "./brand/brand.slice";
@@ -12,6 +9,7 @@ import productReducer from "./product/product.slice";
 import customerReducer from "./customer/customer.slice";
 import settingsReducer from "./settings/settings.slice";
 import cartReducer from "./cart/cart.slice";
+import addressReducer from "./address/address.slice";
 
 const createNoopStorage = () => {
   return {
@@ -40,6 +38,7 @@ const rootReducer = combineReducers({
   customer: customerReducer,
   settings: settingsReducer,
   cart: cartReducer,
+  address: addressReducer,
 });
 
 const persistConfig = {
@@ -47,9 +46,9 @@ const persistConfig = {
   storage,
   whitelist: [
     // "category",
-     "settings",
-     "cart"
-    ],
+    "settings",
+    "cart",
+  ],
 };
 
 const persistedReducer = persistReducer(persistConfig, rootReducer);
