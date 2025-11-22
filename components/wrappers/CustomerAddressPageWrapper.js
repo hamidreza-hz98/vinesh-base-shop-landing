@@ -1,10 +1,21 @@
 "use client"
 
-import React from 'react'
+import React, { useCallback, useEffect } from 'react'
+import Addresses from '../common/Addresses'
+import { useDispatch } from 'react-redux'
+import { getCustomerAddresses } from '@/store/address/address.actions'
+import nookies from "nookies";
 
 const CustomerAddressPageWrapper = () => {
+  const dispatch = useDispatch()
+  const { customer } = nookies.get();
+
+  useEffect(() => {
+    dispatch(getCustomerAddresses(customer))
+  }, [dispatch, customer])
+
   return (
-    <div>CustomerAddressPageWrapper</div>
+    <Addresses isInCart={false} />
   )
 }
 

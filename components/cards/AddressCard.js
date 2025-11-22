@@ -66,7 +66,6 @@ const AddressCard = ({
         </Box>
       </Box>
 
-      {controls && (
         <>
           {/* Desktop Actions */}
           <Box sx={{ display: { xs: "none", sm: "flex" }, gap: 1 }}>
@@ -137,7 +136,6 @@ const AddressCard = ({
             </MenuItem>
           </Menu>
         </>
-      )}
     </Paper>
   );
 };

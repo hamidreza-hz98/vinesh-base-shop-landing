@@ -184,6 +184,7 @@ useEffect(() => {
             onCloseMenu={handleMenuClose}
             onMenuOpen={handleMenuOpen}
             menuAddressId={menuAddressId}
+            controls={isInCart}
           />
         ))
       ) : (
