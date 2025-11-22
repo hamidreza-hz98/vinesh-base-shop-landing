@@ -47,6 +47,9 @@ export const modifyProductApi = (id) =>
 export const getAllProductsApi = (query) =>
   `${process.env.NEXT_PUBLIC_BASE_URL}/product?${query}`;
 
+export const customerInfoApi = (_id) =>
+  `${process.env.NEXT_PUBLIC_BASE_URL}/customer/${_id}`;
+
 export const loginApi = `${process.env.NEXT_PUBLIC_BASE_URL}/customer/login`;
 
 export const signupApi = `${process.env.NEXT_PUBLIC_BASE_URL}/customer/signup`;
@@ -56,15 +59,26 @@ export const getSettingsApi = (section) =>
 
 export const modifySettingsApi = `${process.env.NEXT_PUBLIC_BASE_URL}/settings`;
 
-export const cartApi = `${process.env.NEXT_PUBLIC_BASE_URL}/cart`
+export const cartApi = `${process.env.NEXT_PUBLIC_BASE_URL}/cart`;
 
-export const modifyCartApi = _id => `${process.env.NEXT_PUBLIC_BASE_URL}/cart/update/${_id}`
+export const modifyCartApi = (_id) =>
+  `${process.env.NEXT_PUBLIC_BASE_URL}/cart/update/${_id}`;
 
-export const getCartApi = (_id) => `${process.env.NEXT_PUBLIC_BASE_URL}/cart/details/${_id}`
+export const getCartApi = (_id) =>
+  `${process.env.NEXT_PUBLIC_BASE_URL}/cart/details/${_id}`;
 
-export const getCustomerCartApi = (customerId) => `${process.env.NEXT_PUBLIC_BASE_URL}/cart/${customerId}`
+export const getCustomerCartApi = (customerId) =>
+  `${process.env.NEXT_PUBLIC_BASE_URL}/cart/${customerId}`;
 
-export const modifyAddressApi = (_id) => `${process.env.NEXT_PUBLIC_BASE_URL}/address/${_id}`
+export const modifyAddressApi = (_id) =>
+  `${process.env.NEXT_PUBLIC_BASE_URL}/address/${_id}`;
 
-export const addressApi = `${process.env.NEXT_PUBLIC_BASE_URL}/address`
+export const addressApi = `${process.env.NEXT_PUBLIC_BASE_URL}/address`;
 
+export const orderApi = `${process.env.NEXT_PUBLIC_BASE_URL}/order`;
+
+export const customerOrdersApi = ({_id, query}) =>
+  `${process.env.NEXT_PUBLIC_BASE_URL}/order/customer/${_id}?${query}`;
+
+export const customerOrderDetailsApi = (_id, customerId) =>
+  `${process.env.NEXT_PUBLIC_BASE_URL}/order/details/customer/${_id}?customerId=${customerId}`;

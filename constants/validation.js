@@ -29,3 +29,45 @@ export const addressFormValidationSchema = yup.object().shape({
     province: yup.string().required("استان الزامی است"),
     city: yup.string().required("شهر الزامی است"),
   });
+
+  export const userInformationSchema = yup.object().shape({
+  firstName: yup
+    .string()
+    .trim()
+    .required("نام ضروری است"),
+
+  lastName: yup
+    .string()
+    .trim()
+    .required("نام‌خانوادگی ضروری است"),
+
+  phone: yup
+    .string()
+    .matches(iranPhoneRegex, "شماره موبایل معتبر نیست (مثال: 09123456789)")
+    .required("شماره موبایل ضروری است"),
+
+  email: yup
+    .string()
+    .email("ایمیل معتبر نیست")
+    .required("ایمیل ضروری است"),
+
+  birthdate: yup
+    .string()
+    .nullable(),
+
+ oldPassword: yup
+  .string()
+  .nullable()
+  .transform((value) => (value === "" ? null : value)),
+
+newPassword: yup
+  .string()
+  .nullable()
+  .transform((value) => (value === "" ? null : value)),
+
+newPasswordConfirmation: yup
+  .string()
+  .nullable()
+  .transform((value) => (value === "" ? null : value))
+  .oneOf([yup.ref("newPassword"), null], "تکرار رمز جدید مطابق نیست")
+});

@@ -16,12 +16,15 @@ import CartCheckoutPageWrapper from "./CartCheckoutPageWrapper";
 import CartShipmentPageWrapper from "./CartShipmentPageWrapper";
 import CartFinalizePageWrapper from "./CartFinalizePageWrapper";
 import { calculateFinalPrice, formatPrice, toPersian } from "@/lib/number";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { selectCart, selectCartLoading } from "@/store/cart/cart.selector";
 import Loader from "../common/Loader";
 import AuthenticationDrawer from "../drawers/AuthenticationDrawer";
 import nookies from "nookies";
 import useNotifications from "@/hooks/useNotifications/useNotifications";
+import { createOrder } from "@/store/order/order.action";
+import { useRouter } from "next/navigation";
+import routes from "@/constants/landing.routes";
 
 const PersianStepIcon = (props) => {
   const { icon, active, completed } = props;
@@ -57,7 +60,9 @@ const CartPageWrapper = () => {
   const loading = useSelector(selectCartLoading);
   const { customer } = nookies.get();
 
+  const dispatch = useDispatch();
   const notifications = useNotifications();
+  const router = useRouter();
 
   const cart = useSelector(selectCart);
 
@@ -77,7 +82,7 @@ const CartPageWrapper = () => {
     <CartFinalizePageWrapper key={2} />,
   ];
 
-  const handleNext = () => {
+  const handleNext = async () => {
     if (activeStep === 0 && !customer) {
       setOpenAuth(true);
       return;
@@ -96,6 +101,31 @@ const CartPageWrapper = () => {
       });
 
       return;
+    }
+
+    if (activeStep === 2) {
+      try {
+        const { message, order } = await dispatch(
+          createOrder({ cart, customer })
+        ).unwrap();
+
+        notifications.show(message, {
+          severity: "success",
+          autoHideDuration: 3000,
+        });
+
+        return router.push(
+          `${routes.paymentResult.link}?order=${order.code}&result=successful`
+        );
+      } catch (error) {
+        notifications.show(error, {
+          severity: "error",
+          autoHideDuration: 3000,
+        });
+        return router.push(
+          `${routes.paymentResult.link}?order=12345&result=failed`
+        );
+      }
     }
 
     setActiveStep((prevActiveStep) => prevActiveStep + 1);

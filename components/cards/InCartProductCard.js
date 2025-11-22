@@ -234,7 +234,7 @@ const InCartProductCard = ({ product, quantity, isFinalize = false }) => {
         )}
 
         <Typography variant="caption" mt={1}>
-          قیمت کل: {formatPrice(finalPrice)}
+          قیمت کل: {formatPrice(finalPrice * quantity)}
         </Typography>
       </Box>
     </Card>

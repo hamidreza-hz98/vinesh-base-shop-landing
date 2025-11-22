@@ -56,7 +56,7 @@ const routes = {
     icon: <PersonIcon />,
   },
 
-  LocationPinIcon: {
+  profileAddresses: {
     label: "آدرس های من",
     link: "/profile/addresses",
     icon: <LocationPinIcon />,

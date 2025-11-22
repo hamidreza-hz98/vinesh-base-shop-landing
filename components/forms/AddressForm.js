@@ -12,12 +12,9 @@ import {
   Grid,
   Autocomplete,
   Box,
-  Typography,
   IconButton,
 } from "@mui/material";
-import { useSelector, useDispatch } from "react-redux";
 import { useForm, Controller } from "react-hook-form";
-import * as yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { toPersian } from "@/lib/number";
 import { shahr, ostan } from "iran-cities-json";

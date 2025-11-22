@@ -1,4 +1,4 @@
-import { login, signup } from "./customer.action";
+import { getCustomerInformation, login, signup, updateCustomer } from "./customer.action";
 
 const { createSlice } = require("@reduxjs/toolkit");
 
@@ -32,6 +32,25 @@ const customerSlice = createSlice({
         state.loading = false;
       })
       .addCase(signup.rejected, (state) => {
+        state.loading = false;
+      })
+      .addCase(getCustomerInformation.pending, (state) => {
+        state.loading = true;
+      })
+      .addCase(getCustomerInformation.fulfilled, (state, action) => {
+        state.loading = false;
+        state.customer = action.payload
+      })
+      .addCase(getCustomerInformation.rejected, (state) => {
+        state.loading = false;
+      })
+       .addCase(updateCustomer.pending, (state) => {
+        state.loading = true;
+      })
+      .addCase(updateCustomer.fulfilled, (state) => {
+        state.loading = false;
+      })
+      .addCase(updateCustomer.rejected, (state) => {
         state.loading = false;
       })
 });
