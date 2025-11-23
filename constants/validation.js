@@ -71,3 +71,19 @@ newPasswordConfirmation: yup
   .transform((value) => (value === "" ? null : value))
   .oneOf([yup.ref("newPassword"), null], "تکرار رمز جدید مطابق نیست")
 });
+
+export const contactSchema = yup.object().shape({
+  fullName: yup.string()
+    .required("وارد کردن نام و نام خانوادگی الزامی است")
+    .min(3, "حداقل ۳ کاراکتر وارد کنید")
+    .max(50, "حداکثر ۵۰ کاراکتر وارد کنید"),
+
+  mobile: yup.string()
+    .required("شماره تماس الزامی است")
+    .matches(/^09[0-9]{9}$/, "شماره تلفن معتبر وارد کنید"),
+
+  message: yup.string()
+    .required("نوشتن پیام الزامی است")
+    .min(10, "حداقل ۱۰ کاراکتر وارد کنید")
+    .max(2000, "حداکثر ۲۰۰۰ کاراکتر وارد کنید"),
+});

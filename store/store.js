@@ -11,6 +11,7 @@ import settingsReducer from "./settings/settings.slice";
 import cartReducer from "./cart/cart.slice";
 import addressReducer from "./address/address.slice";
 import orderReducer from "./order/order.slice";
+import contactReducer from "./contact/contact.slice";
 
 const createNoopStorage = () => {
   return {
@@ -41,6 +42,7 @@ const rootReducer = combineReducers({
   cart: cartReducer,
   address: addressReducer,
   order: orderReducer,
+  contact: contactReducer,
 });
 
 const persistConfig = {

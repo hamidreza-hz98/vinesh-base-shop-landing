@@ -77,8 +77,10 @@ export const addressApi = `${process.env.NEXT_PUBLIC_BASE_URL}/address`;
 
 export const orderApi = `${process.env.NEXT_PUBLIC_BASE_URL}/order`;
 
-export const customerOrdersApi = ({_id, query}) =>
+export const customerOrdersApi = ({ _id, query }) =>
   `${process.env.NEXT_PUBLIC_BASE_URL}/order/customer/${_id}?${query}`;
 
 export const customerOrderDetailsApi = (_id, customerId) =>
   `${process.env.NEXT_PUBLIC_BASE_URL}/order/details/customer/${_id}?customerId=${customerId}`;
+
+export const contactApi = `${process.env.NEXT_PUBLIC_BASE_URL}/contact`;
