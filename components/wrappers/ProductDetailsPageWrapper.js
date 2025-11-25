@@ -183,7 +183,7 @@ const ProductDetailsPageWrapper = ({ slug }) => {
 
   useEffect(() => {
     const updatedCart = cart?.products?.find(
-      (item) => item.product === product?._id
+      (item) => item.product._id === product?._id
     );
 
     setIsInCart(updatedCart);

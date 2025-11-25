@@ -25,13 +25,23 @@ import { setFilePath } from "@/lib/media";
 import routes from "@/constants/landing.routes";
 import SearchDialog from "../drawers/SearchDialog";
 import { paramifyLink, setRequestQuery } from "@/lib/request";
-import { useSearchParams } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
+import { selectCart } from "@/store/cart/cart.selector";
+import { toPersian } from "@/lib/number";
+import nookies from "nookies";
+import AuthenticationDrawer from "../drawers/AuthenticationDrawer";
 
 export default function DesktopHeader() {
+  const [openAuth, setOpenAuth] = useState(false);
+
   const { categories } = useSelector(selectCategories);
   const { general } = useSelector(selectSettings) || {};
+  const cart = useSelector(selectCart);
 
-  const searchParams = useSearchParams()
+  const { token, customer } = nookies.get();
+
+  const searchParams = useSearchParams();
+  const router = useRouter();
 
   const [searchDialogOpen, setSearchDialogOpen] = useState(false);
 
@@ -46,10 +56,17 @@ export default function DesktopHeader() {
 
   const open = Boolean(anchorEl);
 
-  if (!categories || !general) {
+  const handleClickProfile = () => {
+    if (customer && token) {
+      router.push("/profile");
+    } else {
+      setOpenAuth(true);
+    }
+  };
+
+  if (!categories || !general || !cart) {
     return <Loader />;
   }
-
 
   return (
     <AppBar
@@ -166,8 +183,8 @@ export default function DesktopHeader() {
                   >
                     {/* Parent category */}
                     <Link
-                      href={`/products${paramifyLink(searchParams, "filters" , {
-                          categories: { type: "in", value: [cat._id] },
+                      href={`/products${paramifyLink(searchParams, "filters", {
+                        categories: { type: "in", value: [cat._id] },
                       })}`}
                       sx={{ fontWeight: "bold", mb: 1 }}
                     >
@@ -179,9 +196,13 @@ export default function DesktopHeader() {
                       <MenuItem
                         key={child.slug}
                         component="a"
-                          href={`/products?${paramifyLink(searchParams, "filters" , {
-                          categories: { type: "in", value: [child._id] },
-                      })}`}
+                        href={`/products?${paramifyLink(
+                          searchParams,
+                          "filters",
+                          {
+                            categories: { type: "in", value: [child._id] },
+                          }
+                        )}`}
                         onClick={handleClose}
                         sx={{ p: 0, my: 0.5 }}
                       >
@@ -229,8 +250,13 @@ export default function DesktopHeader() {
                 color: "white",
                 "&:hover": { bgcolor: "primary.main", color: "black" },
               }}
+              LinkComponent={Link}
+              href="/cart"
             >
-              <Badge badgeContent={3} color="primary">
+              <Badge
+                badgeContent={toPersian(cart?.products?.length)}
+                color="primary"
+              >
                 <ShoppingCartIcon />
               </Badge>
             </IconButton>
@@ -241,6 +267,7 @@ export default function DesktopHeader() {
                 color: "white",
                 "&:hover": { bgcolor: "primary.main", color: "black" },
               }}
+              onClick={handleClickProfile}
             >
               <PersonOutlineIcon />
             </IconButton>
@@ -251,6 +278,14 @@ export default function DesktopHeader() {
       <SearchDialog
         open={searchDialogOpen}
         onClose={() => setSearchDialogOpen(false)}
+      />
+
+      <AuthenticationDrawer
+        open={openAuth}
+        onClose={() => setOpenAuth(false)}
+        onAuthenticated={() => {
+          setOpenAuth(false);
+        }}
       />
     </AppBar>
   );

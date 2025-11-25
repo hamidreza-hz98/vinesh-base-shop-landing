@@ -35,6 +35,8 @@ const PrimaryProductCard = ({ product }) => {
 
   const [isInCart, setIsInCart] = useState(null);
 
+  
+
   const hasDiscount = product.discount > 0;
   const inStock = product.stock > 0;
 
@@ -100,11 +102,11 @@ const PrimaryProductCard = ({ product }) => {
 
     useEffect(() => {
       const updatedCart = cart?.products?.find(
-        (item) => item.product === product?._id
+        (item) => item.product._id === product?._id
       );
-  
+
       setIsInCart(updatedCart);
-    }, [cart]);
+    }, [cart, product?._id]);
   
 
   return (
@@ -259,6 +261,7 @@ const PrimaryProductCard = ({ product }) => {
             {formatPrice(product.price)} تومان
           </Typography>
         )}
+
       </CardContent>
 
       {/* 🛒 Action Buttons */}
@@ -269,7 +272,7 @@ const PrimaryProductCard = ({ product }) => {
             justifyContent="space-between"
             mt={2}
           >
-            <Typography variant="body1">تعداد در سبد خرید شما:</Typography>
+            <Typography variant="caption">تعداد در سبد خرید شما:</Typography>
 
             <Box display="flex" alignItems="center" justifyContent="flex-end">
               <IconButton
@@ -285,6 +288,7 @@ const PrimaryProductCard = ({ product }) => {
                 onClick={(e) => {
                   e.preventDefault();
                   e.stopPropagation();
+                  e.nativeEvent.stopImmediatePropagation();
                   handleAddToCart();
                 }}
               >
@@ -306,6 +310,7 @@ const PrimaryProductCard = ({ product }) => {
                 onClick={(e) => {
                   e.preventDefault();
                   e.stopPropagation();
+                  e.nativeEvent.stopImmediatePropagation();
                   handleRemoveFromcart();
                 }}
               >
@@ -326,6 +331,7 @@ const PrimaryProductCard = ({ product }) => {
             onClick={(e) => {
               e.preventDefault();
               e.stopPropagation();
+              e.nativeEvent.stopImmediatePropagation();
               handleAddToCart();
             }}
             sx={{

@@ -206,7 +206,7 @@ const HomepageWrapper = () => {
             alignItems="center"
             justifyContent="space-between"
           >
-            <Typography variant="h1">پرفروش ترین محصولات</Typography>
+            <Typography variant="h3">پرفروش ترین محصولات</Typography>
 
             <Button
               variant="text"
@@ -238,7 +238,7 @@ const HomepageWrapper = () => {
             alignItems="center"
             justifyContent="space-between"
           >
-            <Typography mt={6}>تخفیف ها</Typography>
+            <Typography variant="h3">تخفیف ها</Typography>
 
             <Button
               variant="text"

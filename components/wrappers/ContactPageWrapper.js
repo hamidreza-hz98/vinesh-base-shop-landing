@@ -62,7 +62,7 @@ const ContactPageWrapper = () => {
 
           {contactInfo.mobile && (
             <ContactRow
-              href={`dial:${contactInfo.mobile}`}
+              href={`tel:${contactInfo.mobile}`}
               label={`تماس تلفنی با ${toPersian(contactInfo.mobile)}`}
               color={theme.palette.primary.main}
               icon={
@@ -84,7 +84,7 @@ const ContactPageWrapper = () => {
 
           {contactInfo.phone && (
             <ContactRow
-              href={`dial:${contactInfo.phone}`}
+              href={`tel:${contactInfo.phone}`}
               label={`تلفن ثابت: ${toPersian(contactInfo.phone)}`}
               color={theme.palette.primary.main}
               icon={

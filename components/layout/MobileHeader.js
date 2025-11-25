@@ -32,7 +32,7 @@ export default function MobileHeader() {
   const { general } = useSelector(selectSettings) || {};
   const [searchDialogOpen, setSearchDialogOpen] = useState(false);
 
-  let links = useMenuLinks()
+  let links = useMenuLinks();
 
   if (!general) return <Loader />;
 
@@ -100,17 +100,15 @@ export default function MobileHeader() {
           </Typography>
         </Link>
 
-        <IconButton
-              onClick={() => setSearchDialogOpen(true)}
-        color="inherit">
+        <IconButton onClick={() => setSearchDialogOpen(true)} color="inherit">
           <SearchIcon />
         </IconButton>
       </Toolbar>
 
-       <SearchDialog
-              open={searchDialogOpen}
-              onClose={() => setSearchDialogOpen(false)}
-            />
+      <SearchDialog
+        open={searchDialogOpen}
+        onClose={() => setSearchDialogOpen(false)}
+      />
     </AppBar>
   );
 }

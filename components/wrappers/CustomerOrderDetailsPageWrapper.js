@@ -25,6 +25,7 @@ import { setFilePath } from "@/lib/media";
 import { formatDateAndTime } from "@/lib/date";
 import ContentCopyIcon from "@mui/icons-material/ContentCopy";
 import useNotifications from "@/hooks/useNotifications/useNotifications";
+import InfoIcon from "@mui/icons-material/Info";
 
 const DetailItem = ({ label, value, copyable }) => {
   const notifications = useNotifications();
@@ -47,9 +48,9 @@ const DetailItem = ({ label, value, copyable }) => {
       <Box
         display="flex"
         alignItems="center"
-        sx={{ cursor: "pointer" }}
+        sx={{ cursor: copyable && "pointer" }}
         gap={1}
-        onClick={handleCopy}
+        onClick={copyable && handleCopy}
       >
         {copyable && (
           <IconButton size="small">
@@ -121,15 +122,24 @@ const CustomerOrderDetailsPageWrapper = ({ code }) => {
         <DetailItem label="کد سفارش" value={order?.code} />
       </Grid>
 
-      {order?.shipmentTrackNumber && (
-        <Grid item size={{ xs: 12, sm: 3 }}>
+      <Grid item size={{ xs: 12, sm: order?.shipmentTrackNumber ? 3 : 6 }}>
+        {order?.shipmentTrackNumber ? (
           <DetailItem
             label="کد رهگیری مرسوله"
             value={order?.shipmentTrackNumber}
             copyable
           />
-        </Grid>
-      )}
+        ) : (
+          <Box color="info.main" display="flex" alignItems="center" justifyContent="start" gap={1}>
+
+            <InfoIcon />
+          <Typography>
+            به محض تحویل سفارش شما به مامور پست، کد رهگیری همینجا قابل مشاهده
+            خواهد بود.
+          </Typography>
+          </Box>
+        )}
+      </Grid>
 
       <Grid item size={{ xs: 12, sm: 6 }}>
         <Typography fontSize={13} color="text.secondary">
@@ -137,12 +147,10 @@ const CustomerOrderDetailsPageWrapper = ({ code }) => {
         </Typography>
 
         <Box display="flex" alignItems="center" gap={1}>
-            <Box display="flex">
-            {orderStatuses[order.status].icon}
-            </Box>
+          <Box display="flex">{orderStatuses[order.status].icon}</Box>
 
           <Typography fontSize={15} fontWeight="bold">
-          {orderStatuses[order.status].name}
+            {orderStatuses[order.status].name}
           </Typography>
         </Box>
       </Grid>
