@@ -24,10 +24,14 @@ import Image from "next/image";
 import { setFilePath } from "@/lib/media";
 import routes from "@/constants/landing.routes";
 import SearchDialog from "../drawers/SearchDialog";
+import { paramifyLink, setRequestQuery } from "@/lib/request";
+import { useSearchParams } from "next/navigation";
 
 export default function DesktopHeader() {
   const { categories } = useSelector(selectCategories);
   const { general } = useSelector(selectSettings) || {};
+
+  const searchParams = useSearchParams()
 
   const [searchDialogOpen, setSearchDialogOpen] = useState(false);
 
@@ -45,6 +49,7 @@ export default function DesktopHeader() {
   if (!categories || !general) {
     return <Loader />;
   }
+
 
   return (
     <AppBar
@@ -161,7 +166,9 @@ export default function DesktopHeader() {
                   >
                     {/* Parent category */}
                     <Link
-                      href={`/products?categories=${cat.slug}`}
+                      href={`/products${paramifyLink(searchParams, "filters" , {
+                          categories: { type: "in", value: [cat._id] },
+                      })}`}
                       sx={{ fontWeight: "bold", mb: 1 }}
                     >
                       {cat.name}
@@ -172,7 +179,9 @@ export default function DesktopHeader() {
                       <MenuItem
                         key={child.slug}
                         component="a"
-                        href={`/products?categories=${child.slug}`}
+                          href={`/products?${paramifyLink(searchParams, "filters" , {
+                          categories: { type: "in", value: [child._id] },
+                      })}`}
                         onClick={handleClose}
                         sx={{ p: 0, my: 0.5 }}
                       >

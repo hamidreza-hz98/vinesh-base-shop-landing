@@ -8,19 +8,24 @@ import { selectSettings } from "@/store/settings/settings.selector";
 import Loader from "../common/Loader";
 import HeroSlider from "../common/HeroSlider";
 import { selectCategories } from "@/store/category/category.selector";
-import { Box, Grid, Typography } from "@mui/material";
+import { Box, Button, Grid, Typography, useTheme } from "@mui/material";
 import Link from "next/link";
 import Image from "next/image";
 import { setFilePath } from "@/lib/media";
 import { selectBrands } from "@/store/brand/brand.selector";
 import { getAllProducts } from "@/store/product/product.action";
-import { setRequestQuery } from "@/lib/request";
+import { paramifyLink, setRequestQuery } from "@/lib/request";
 import PrimaryProductCard from "../cards/PrimaryProductCard";
 import { productsSliderOptions } from "@/constants/slider-options";
 import Slider from "../common/Slider";
+import { useSearchParams } from "next/navigation";
+import ChevronLeftIcon from "@mui/icons-material/ChevronLeft";
 
 const HomepageWrapper = () => {
   const dispatch = useDispatch();
+  const searchParams = useSearchParams();
+
+  const theme = useTheme();
 
   const [mostSoldProducts, setMostSoldProducts] = useState([]);
   const [productsWithDiscount, setProductsWithDiscount] = useState([]);
@@ -60,7 +65,6 @@ const HomepageWrapper = () => {
     fetchProducts();
   }, [dispatch]);
 
-
   if (
     !general ||
     !categories ||
@@ -89,7 +93,9 @@ const HomepageWrapper = () => {
         {categories.map((cat, index) => (
           <Grid size={{ xs: 6, sm: 4, md: 3, lg: 2 }} key={index}>
             <Link
-              href={`/products/categories=${cat.slug}`}
+              href={`/products${paramifyLink(searchParams, "filters", {
+                categories: { type: "in", value: [cat._id] },
+              })}`}
               style={{
                 display: "block",
                 position: "relative",
@@ -158,7 +164,9 @@ const HomepageWrapper = () => {
           <Grid size={{ xs: 6, sm: 4, md: 3, lg: 2 }} key={index}>
             <Box
               component={Link}
-              href={`/products?brands=${item.slug}`}
+              href={`/products${paramifyLink(searchParams, "filters", {
+                brand: { type: "eq", value: item._id },
+              })}`}
               sx={{
                 display: "flex",
                 flexDirection: "column",
@@ -192,7 +200,26 @@ const HomepageWrapper = () => {
 
       {mostSoldProducts && mostSoldProducts.length !== 0 && (
         <>
-          <Typography mt={6}>پرفروش ترین محصولات</Typography>
+          <Box
+            mt={6}
+            display="flex"
+            alignItems="center"
+            justifyContent="space-between"
+          >
+            <Typography variant="h1">پرفروش ترین محصولات</Typography>
+
+            <Button
+              variant="text"
+              LinkComponent={Link}
+              href={`/products${paramifyLink(searchParams, "sort", [
+                { field: "createdAt", order: "desc" },
+              ])}`}
+              style={{ color: theme.palette.primary.main }}
+            >
+              مشاهده همه
+              <ChevronLeftIcon />
+            </Button>
+          </Box>
 
           <Slider
             options={{
@@ -205,7 +232,26 @@ const HomepageWrapper = () => {
 
       {productsWithDiscount && productsWithDiscount.length !== 0 && (
         <>
-          <Typography mt={6}>تخفیف ها</Typography>
+          <Box
+            mt={6}
+            display="flex"
+            alignItems="center"
+            justifyContent="space-between"
+          >
+            <Typography mt={6}>تخفیف ها</Typography>
+
+            <Button
+              variant="text"
+              LinkComponent={Link}
+              href={`/products${paramifyLink(searchParams, "filters", {
+                discount: { type: "gt", value: 0 },
+              })}`}
+              style={{ color: theme.palette.primary.main }}
+            >
+              مشاهده همه
+              <ChevronLeftIcon />
+            </Button>
+          </Box>
 
           <Slider
             options={{

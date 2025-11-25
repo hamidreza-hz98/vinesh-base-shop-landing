@@ -37,6 +37,8 @@ import useNotifications from "@/hooks/useNotifications/useNotifications";
 import AddIcon from "@mui/icons-material/Add";
 import RemoveIcon from "@mui/icons-material/Remove";
 import DeleteOutlineIcon from "@mui/icons-material/DeleteOutline";
+import { paramifyLink } from "@/lib/request";
+import { useSearchParams } from "next/navigation";
 
 function TabPanel({ children, value, index }) {
   return (
@@ -49,6 +51,9 @@ function TabPanel({ children, value, index }) {
 const ProductDetailsPageWrapper = ({ slug }) => {
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
+
+  const searchParams = useSearchParams()
+
   const dispatch = useDispatch();
   const notifications = useNotifications();
   const { customer } = nookies.get();
@@ -164,7 +169,7 @@ const ProductDetailsPageWrapper = ({ slug }) => {
         })
       ).unwrap();
 
-       notifications.show(message || "سبد خرید با موفقیت ویرایش شد!", {
+      notifications.show(message || "سبد خرید با موفقیت ویرایش شد!", {
         severity: "success",
         autoHideDuration: 3000,
       });
@@ -191,7 +196,9 @@ const ProductDetailsPageWrapper = ({ slug }) => {
         { name: "همه محصولات", path: "/products" },
         {
           name: product?.categories?.[0].name,
-          path: `/products?filters={categories:{value: ${product?.categories?.[0].slug},type: "in"}}`,
+          path: `/products${paramifyLink(searchParams, "filters", {
+            categories: { type: "in", value: [product?.categories?.[0]._id] },
+          })}`,
         },
         { name: product?.title },
       ]}
@@ -290,7 +297,11 @@ const ProductDetailsPageWrapper = ({ slug }) => {
                   size="small"
                   onClick={handleRemoveFromcart}
                 >
-                  {isInCart.quantity === 1 ? <DeleteOutlineIcon /> : <RemoveIcon />}
+                  {isInCart.quantity === 1 ? (
+                    <DeleteOutlineIcon />
+                  ) : (
+                    <RemoveIcon />
+                  )}
                 </IconButton>
               </Box>
             </Box>
