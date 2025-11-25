@@ -13,7 +13,7 @@ import {
 } from "@mui/material";
 import SearchIcon from "@mui/icons-material/Search";
 import MenuIcon from "@mui/icons-material/Menu";
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import { selectSettings } from "@/store/settings/settings.selector";
 import Loader from "../common/Loader";
@@ -25,10 +25,12 @@ import { useDialogs } from "@/hooks/useDialogs/useDialogs";
 import routes from "@/constants/landing.routes";
 import { selectCategories } from "@/store/category/category.selector";
 import useMenuLinks from "@/hooks/useMenuLinks";
+import SearchDialog from "../drawers/SearchDialog";
 
 export default function MobileHeader() {
   const dialogs = useDialogs();
   const { general } = useSelector(selectSettings) || {};
+  const [searchDialogOpen, setSearchDialogOpen] = useState(false);
 
   let links = useMenuLinks()
 
@@ -98,10 +100,17 @@ export default function MobileHeader() {
           </Typography>
         </Link>
 
-        <IconButton color="inherit">
+        <IconButton
+              onClick={() => setSearchDialogOpen(true)}
+        color="inherit">
           <SearchIcon />
         </IconButton>
       </Toolbar>
+
+       <SearchDialog
+              open={searchDialogOpen}
+              onClose={() => setSearchDialogOpen(false)}
+            />
     </AppBar>
   );
 }

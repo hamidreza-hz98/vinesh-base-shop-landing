@@ -15,7 +15,7 @@ import {
 import ShoppingCartIcon from "@mui/icons-material/ShoppingCartOutlined";
 import PersonOutlineIcon from "@mui/icons-material/PersonOutline";
 import SearchIcon from "@mui/icons-material/Search";
-import React from "react";
+import React, { useState } from "react";
 import { useSelector } from "react-redux";
 import { selectCategories } from "@/store/category/category.selector";
 import Loader from "../common/Loader";
@@ -23,12 +23,13 @@ import { selectSettings } from "@/store/settings/settings.selector";
 import Image from "next/image";
 import { setFilePath } from "@/lib/media";
 import routes from "@/constants/landing.routes";
+import SearchDialog from "../drawers/SearchDialog";
 
 export default function DesktopHeader() {
   const { categories } = useSelector(selectCategories);
-  const {general}  = useSelector(selectSettings) || {};
+  const { general } = useSelector(selectSettings) || {};
 
-  
+  const [searchDialogOpen, setSearchDialogOpen] = useState(false);
 
   const [anchorEl, setAnchorEl] = React.useState(null);
 
@@ -208,6 +209,7 @@ export default function DesktopHeader() {
                 color: "white",
                 "&:hover": { bgcolor: "primary.main", color: "black" },
               }}
+              onClick={() => setSearchDialogOpen(true)}
             >
               <SearchIcon />
             </IconButton>
@@ -236,6 +238,11 @@ export default function DesktopHeader() {
           </Box>
         </Toolbar>
       </Container>
+
+      <SearchDialog
+        open={searchDialogOpen}
+        onClose={() => setSearchDialogOpen(false)}
+      />
     </AppBar>
   );
 }

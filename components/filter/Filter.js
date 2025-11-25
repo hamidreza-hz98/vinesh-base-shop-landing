@@ -11,6 +11,8 @@ import {
   Slider,
   Button,
   useTheme,
+  TextField,
+  useMediaQuery,
 } from "@mui/material";
 import { useSelector } from "react-redux";
 import { selectCategories } from "@/store/category/category.selector";
@@ -18,8 +20,10 @@ import { selectBrands } from "@/store/brand/brand.selector";
 import { useRouter, useSearchParams } from "next/navigation";
 import { formatPrice } from "@/lib/number";
 
-const SidebarFilter = ({onChange}) => {
+const SidebarFilter = ({ onChange, onClose }) => {
   const theme = useTheme();
+  const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
+
   const router = useRouter();
   const searchParams = useSearchParams();
 
@@ -31,6 +35,7 @@ const SidebarFilter = ({onChange}) => {
   const [priceRange, setPriceRange] = useState([0, 1000000000]);
   const [inStockOnly, setInStockOnly] = useState(false);
   const [discountOnly, setDiscountOnly] = useState(false);
+const [searchValue, setSearchValue] = useState("");
 
   // Initialize filters from URL
   useEffect(() => {
@@ -46,6 +51,12 @@ const SidebarFilter = ({onChange}) => {
       } catch (e) {}
     }
   }, [searchParams]);
+
+  useEffect(() => {
+  const existingSearch = searchParams.get("search") || "";
+  setSearchValue(existingSearch);
+}, [searchParams]);
+
 
   /** 🔧 Convert frontend state → backend filter structure */
   const pushFiltersToUrl = (stateFilters) => {
@@ -77,6 +88,18 @@ const SidebarFilter = ({onChange}) => {
     router.replace(`?${newSearchParams.toString()}`);
   };
 
+const handleSearchQuery = (e) => {
+  const value = e.target.value;
+  setSearchValue(value);
+
+  if (value.length > 3) {
+    const newParams = new URLSearchParams(searchParams.toString());
+    newParams.set("search", value);
+    router.push(`?${newParams.toString()}`);
+  }
+};
+
+
   // --- category ---
   const toggleCategory = (id) => {
     setSelectedCategories((prev) => {
@@ -93,7 +116,7 @@ const SidebarFilter = ({onChange}) => {
       return updated;
     });
 
-    onChange()
+    onChange();
   };
 
   // --- brand (multi-selection now) ---
@@ -112,7 +135,7 @@ const SidebarFilter = ({onChange}) => {
       return updated;
     });
 
-    onChange()
+    onChange();
   };
 
   // --- price ---
@@ -126,7 +149,7 @@ const SidebarFilter = ({onChange}) => {
       discount: discountOnly,
     });
 
-    onChange()
+    onChange();
   };
 
   // --- inStock ---
@@ -141,7 +164,7 @@ const SidebarFilter = ({onChange}) => {
       discount: discountOnly,
     });
 
-    onChange()
+    onChange();
   };
 
   // --- discount ---
@@ -156,7 +179,7 @@ const SidebarFilter = ({onChange}) => {
       discount: updated,
     });
 
-    onChange()
+    onChange();
   };
 
   // --- reset ---
@@ -168,9 +191,11 @@ const SidebarFilter = ({onChange}) => {
     setDiscountOnly(false);
     const newSearchParams = new URLSearchParams(searchParams.toString());
     newSearchParams.delete("filters");
+    newSearchParams.delete("search");
     router.replace(`?${newSearchParams.toString()}`);
+setSearchValue("");
 
-    onChange()
+    onChange();
   };
 
   return (
@@ -188,6 +213,39 @@ const SidebarFilter = ({onChange}) => {
         width: "100%",
       }}
     >
+      {isMobile && (
+        <Box>
+          <Button
+            variant="outlined"
+            color="error"
+            onClick={onClose}
+            fullWidth
+          >
+            بستن
+          </Button>
+        </Box>
+      )}
+
+      <Box>
+        <Button
+          variant="outlined"
+          color="inherit"
+          onClick={resetFilters}
+          fullWidth
+        >
+          حذف فیلترها
+        </Button>
+      </Box>
+
+      <TextField
+        placeholder="جستجو..."
+        fullWidth
+        size="small"
+        variant="outlined"
+        value={searchValue}
+        onChange={handleSearchQuery}
+      />
+
       {/* Categories */}
       <Box>
         <Typography fontWeight={700} mb={1}>
@@ -276,18 +334,6 @@ const SidebarFilter = ({onChange}) => {
           }
           label="فقط کالاهای دارای تخفیف"
         />
-      </Box>
-
-      {/* Reset */}
-      <Box>
-        <Button
-          variant="outlined"
-          color="inherit"
-          onClick={resetFilters}
-          fullWidth
-        >
-          حذف فیلترها
-        </Button>
       </Box>
     </Box>
   );

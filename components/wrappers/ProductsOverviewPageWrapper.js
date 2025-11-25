@@ -138,6 +138,7 @@ const ProductsOverviewPageWrapper = () => {
         <Filter
           onChange={() => setFilterOpen(false)}
           options={filterProductsOptions}
+          onClose={() => setFilterOpen(false)}
         />
       </Drawer>
 
