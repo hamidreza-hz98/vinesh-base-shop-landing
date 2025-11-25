@@ -44,12 +44,6 @@ const routes = {
     icon: <PaymentIcon />,
   },
 
-  authentication: {
-    label: "ورود / ثبت نام",
-    link: "/authentication",
-    icon: <PersonIcon />,
-  },
-
   profile: {
     label: "پروفایل",
     link: "/profile",
@@ -73,12 +67,6 @@ const routes = {
     link: `/profile/orders/${orderId}`,
     icon: <ShoppingBagIcon />,
   }),
-
-  search: {
-    label: "جستجو",
-    link: "/search",
-    icon: <SearchIcon />,
-  },
 
   about: {
     label: "درباره ما",

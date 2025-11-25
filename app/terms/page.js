@@ -8,10 +8,32 @@ export const metadata = {
   robots: "index, follow",
 };
 
+async function getSchema(){
+  try {
+    const res = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/settings/seo/terms`)
 
-const page = () => {
+    if(!res.ok) throw new Error("Failed to fetch Schema");
+    const { data } = await res.json()
+
+    return data
+  } catch (error) {
+    console.error("Fetch Schema error:", err);
+  }
+}
+
+const page = async () => {
+  const schema = await getSchema()
+  
+  
   return (
+    <>
     <TermsPageWrapper />
+    
+     <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(schema) }}
+      />
+    </>
   )
 }
 

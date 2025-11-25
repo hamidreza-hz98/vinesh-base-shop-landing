@@ -1,0 +1,9 @@
+# *
+User-agent: *
+Allow: /
+
+# Host
+Host: http://localhost:5000/api
+
+# Sitemaps
+Sitemap: http://localhost:5000/api/sitemap.xml

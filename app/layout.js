@@ -18,10 +18,8 @@ async function getDefaultSeo() {
       }
     );
 
-    
-    
     if (!res.ok) throw new Error("Failed to fetch SEO");
-    const {data} = await res.json();
+    const { data } = await res.json();
 
     const baseUrl = process.env.NEXT_PUBLIC_BASE_URL;
 
@@ -44,7 +42,9 @@ async function getDefaultSeo() {
         card: "summary_large_image",
         title: data.twitterTitle || data.title,
         description: data.twitterDescription || data.description,
-        images: data.twitterImage ? [`${baseUrl}${data.twitterImage.path}`] : [],
+        images: data.twitterImage
+          ? [`${baseUrl}${data.twitterImage.path}`]
+          : [],
       },
     };
   } catch (err) {
