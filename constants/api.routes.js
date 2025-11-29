@@ -84,3 +84,8 @@ export const customerOrderDetailsApi = (_id, customerId) =>
   `${process.env.NEXT_PUBLIC_BASE_URL}/order/details/customer/${_id}?customerId=${customerId}`;
 
 export const contactApi = `${process.env.NEXT_PUBLIC_BASE_URL}/contact`;
+
+export const initiateTransactionApi = `${process.env.NEXT_PUBLIC_BASE_URL}/transaction/initiate`;
+
+export const verifyTransactionApi = (query) =>
+  `${process.env.NEXT_PUBLIC_BASE_URL}/transaction/verify?${query}`;

@@ -25,6 +25,7 @@ import useNotifications from "@/hooks/useNotifications/useNotifications";
 import { createOrder } from "@/store/order/order.action";
 import { useRouter } from "next/navigation";
 import routes from "@/constants/landing.routes";
+import { createPaymentGateway } from "@/store/transaction/transaction.action";
 
 const PersianStepIcon = (props) => {
   const { icon, active, completed } = props;
@@ -109,22 +110,27 @@ const CartPageWrapper = () => {
           createOrder({ cart, customer })
         ).unwrap();
 
-        notifications.show(message, {
-          severity: "success",
-          autoHideDuration: 3000,
-        });
+        // notifications.show(message, {
+        //   severity: "success",
+        //   autoHideDuration: 3000,
+        // });
 
-        return router.push(
-          `${routes.paymentResult.link}?order=${order.code}&result=successful`
-        );
+
+        await dispatch(createPaymentGateway({ orderId: order._id })).unwrap()
+
+        // return router.push(
+        //   `${routes.paymentResult.link}?order=${order.code}&result=successful`
+        // );
       } catch (error) {
-        notifications.show(error, {
-          severity: "error",
-          autoHideDuration: 3000,
-        });
-        return router.push(
-          `${routes.paymentResult.link}?order=12345&result=failed`
-        );
+        console.log(error);
+        
+        // notifications.show(error, {
+        //   severity: "error",
+        //   autoHideDuration: 3000,
+        // });
+        // return router.push(
+        //   `${routes.paymentResult.link}?order=12345&result=failed`
+        // );
       }
     }
 
