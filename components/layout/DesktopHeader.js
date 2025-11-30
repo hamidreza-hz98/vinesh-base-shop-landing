@@ -30,6 +30,8 @@ import { selectCart } from "@/store/cart/cart.selector";
 import { toPersian } from "@/lib/number";
 import nookies from "nookies";
 import AuthenticationDrawer from "../drawers/AuthenticationDrawer";
+import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
+import DesktopMegaMenu from "./DesktopMegaMenu";
 
 export default function DesktopHeader() {
   const [openAuth, setOpenAuth] = useState(false);
@@ -139,79 +141,10 @@ export default function DesktopHeader() {
                 همه ی محصولات
               </Link>
 
-              {/* Mega Menu Trigger */}
-              <Typography
-                sx={{
-                  color: "text.primary",
-                  fontSize: 14,
-                  fontWeight: 500,
-                  cursor: "pointer",
-                  "&:hover": { color: "primary.main" },
-                }}
-                onMouseEnter={handleOpen}
-              >
-                دسته بندی ها
-              </Typography>
-
-              <Menu
-                anchorEl={anchorEl}
-                open={open}
-                onClose={handleClose}
-                MenuListProps={{
-                  onMouseEnter: handleOpen,
-                  onMouseLeave: handleClose,
-                  sx: {
-                    display: "flex",
-                    gap: 4,
-                    p: 2,
-                  },
-                }}
-                anchorOrigin={{ vertical: "top", horizontal: "center" }}
-                transformOrigin={{ vertical: "top", horizontal: "center" }}
-                sx={{
-                  "& .MuiPaper-root": {
-                    top: "45px !important",
-                    maxWidth: "fit-content",
-                    p: 2,
-                  },
-                }}
-              >
-                {categories.map((cat) => (
-                  <Box
-                    key={cat.slug}
-                    sx={{ display: "flex", flexDirection: "column" }}
-                  >
-                    {/* Parent category */}
-                    <Link
-                      href={`/products${paramifyLink(searchParams, "filters", {
-                        categories: { type: "in", value: [cat._id] },
-                      })}`}
-                      sx={{ fontWeight: "bold", mb: 1 }}
-                    >
-                      {cat.name}
-                    </Link>
-
-                    {/* Children */}
-                    {cat.children?.map((child) => (
-                      <MenuItem
-                        key={child.slug}
-                        component="a"
-                        href={`/products?${paramifyLink(
-                          searchParams,
-                          "filters",
-                          {
-                            categories: { type: "in", value: [child._id] },
-                          }
-                        )}`}
-                        onClick={handleClose}
-                        sx={{ p: 0, my: 0.5 }}
-                      >
-                        {child.name}
-                      </MenuItem>
-                    ))}
-                  </Box>
-                ))}
-              </Menu>
+              <DesktopMegaMenu
+                categories={categories}
+                searchParams={searchParams}
+              />
 
               {[routes.about, routes.contact, routes.faq].map((item, index) => (
                 <Link
