@@ -1,0 +1,1 @@
+export const selectTransactionLoading = state => state?.transaction?.loading

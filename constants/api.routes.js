@@ -89,3 +89,5 @@ export const initiateTransactionApi = `${process.env.NEXT_PUBLIC_BASE_URL}/trans
 
 export const verifyTransactionApi = (query) =>
   `${process.env.NEXT_PUBLIC_BASE_URL}/transaction/verify?${query}`;
+
+export const retryTransactionApi = `${process.env.NEXT_PUBLIC_BASE_URL}/transaction/retry`;

@@ -1,4 +1,4 @@
-import { createPaymentGateway } from "./transaction.action";
+import { createPaymentGateway, retryPayment } from "./transaction.action";
 
 const { createSlice } = require("@reduxjs/toolkit");
 
@@ -19,6 +19,15 @@ const transactionSlice = createSlice({
         state.loading = false;
       })
       .addCase(createPaymentGateway.rejected, (state) => {
+        state.loading = false;
+      })
+      .addCase(retryPayment.pending, (state) => {
+        state.loading = true;
+      })
+      .addCase(retryPayment.fulfilled, (state) => {
+        state.loading = false;
+      })
+      .addCase(retryPayment.rejected, (state) => {
         state.loading = false;
       }),
 });

@@ -26,6 +26,8 @@ import { formatDateAndTime } from "@/lib/date";
 import ContentCopyIcon from "@mui/icons-material/ContentCopy";
 import useNotifications from "@/hooks/useNotifications/useNotifications";
 import InfoIcon from "@mui/icons-material/Info";
+import { retryPayment } from "@/store/transaction/transaction.action";
+import { selectTransactionLoading } from "@/store/transaction/transaction.selector";
 
 const DetailItem = ({ label, value, copyable }) => {
   const notifications = useNotifications();
@@ -78,6 +80,7 @@ const CustomerOrderDetailsPageWrapper = ({ code }) => {
   const { customer } = nookies.get();
   const order = useSelector(selectOrder);
   const loading = useSelector(selectOrderLoading);
+  const paymentLoading = useSelector(selectTransactionLoading);
 
   const loadData = useCallback(async () => {
     await dispatch(getCustomerOrderDetails({ code, customer })).unwrap();
@@ -86,6 +89,10 @@ const CustomerOrderDetailsPageWrapper = ({ code }) => {
   useEffect(() => {
     loadData();
   }, [loadData]);
+
+  const handleRetryPayment = async () => {
+    await dispatch(retryPayment({ orderId: order?._id })).unwrap();
+  };
 
   if (!order || Object.keys(order).length === 0 || loading) {
     return <Loader />;
@@ -99,7 +106,24 @@ const CustomerOrderDetailsPageWrapper = ({ code }) => {
         alignItems="center"
         justifyContent="space-between"
       >
-        <Typography> جزییات سفارش </Typography>
+        <Box
+          display="flex"
+          alignItems="center"
+          justifyContent="flex-start"
+          gap={2}
+        >
+          <Typography> جزییات سفارش </Typography>
+
+          {["pending_payment", "failed"].includes(order.status) && (
+            <Button
+              loading={paymentLoading}
+              variant="contained"
+              onClick={handleRetryPayment}
+            >
+              پرداخت مجدد
+            </Button>
+          )}
+        </Box>
 
         <Link
           href={routes.profileOrders.link}
@@ -130,13 +154,18 @@ const CustomerOrderDetailsPageWrapper = ({ code }) => {
             copyable
           />
         ) : (
-          <Box color="info.main" display="flex" alignItems="center" justifyContent="start" gap={1}>
-
+          <Box
+            color="info.main"
+            display="flex"
+            alignItems="center"
+            justifyContent="start"
+            gap={1}
+          >
             <InfoIcon />
-          <Typography>
-            به محض تحویل سفارش شما به مامور پست، کد رهگیری همینجا قابل مشاهده
-            خواهد بود.
-          </Typography>
+            <Typography>
+              به محض تحویل سفارش شما به مامور پست، کد رهگیری همینجا قابل مشاهده
+              خواهد بود.
+            </Typography>
           </Box>
         )}
       </Grid>
