@@ -27,7 +27,9 @@ async function getDefaultSeo() {
       title: data.title || "امریان واچ",
       description: data.description || "فروشگاه اینترنتی امیران واچ",
       keywords: data.keywords || "",
-      robots: data.robots || "noindex, nofollow",
+      robots:
+        // data.robots ||
+        "noindex, nofollow",
       canonical: data.canonical || baseUrl,
       additionalMetaTags: data.additionalMetaTags || "",
       openGraph: {
@@ -53,7 +55,7 @@ async function getDefaultSeo() {
       title: "Default Title",
       description: "Default description",
       keywords: "",
-      robots: "index, follow",
+      robots: "noindex, nofollow",
       canonical: process.env.NEXT_PUBLIC_BASE_URL,
       additionalMetaTags: "",
       openGraph: {

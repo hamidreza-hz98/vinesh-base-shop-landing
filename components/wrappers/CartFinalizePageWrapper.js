@@ -28,7 +28,7 @@ const CartFinalizePageWrapper = () => {
       <Box>
         <Typography mb={1} variant="h3">آدرس ارسال:</Typography>
 
-        <AddressCard address={cart?.address} controls={false} />
+        <AddressCard address={cart?.address} isInCart={false} controls={false} />
       </Box>
     </Stack>
   );

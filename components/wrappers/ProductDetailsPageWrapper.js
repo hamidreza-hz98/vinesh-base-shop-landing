@@ -52,7 +52,7 @@ const ProductDetailsPageWrapper = ({ slug }) => {
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
 
-  const searchParams = useSearchParams()
+  const searchParams = useSearchParams();
 
   const dispatch = useDispatch();
   const notifications = useNotifications();
@@ -78,7 +78,7 @@ const ProductDetailsPageWrapper = ({ slug }) => {
   };
 
   useEffect(() => {
-    const query = QueryString.stringify({ slug });
+    const query = QueryString.stringify({ slug }, { encode: false });
 
     dispatch(getProductDetails(query));
   }, [dispatch, slug]);
@@ -227,103 +227,117 @@ const ProductDetailsPageWrapper = ({ slug }) => {
 
           <Divider sx={{ backgroundColor: "primary.dark", mt: 2 }} />
 
-          {/* 💰 Prices */}
-          {hasDiscount ? (
-            <Box
-              sx={{
-                display: "flex",
-                alignItems: "baseline",
-                justifyContent: "space-around",
-                gap: 1,
-                mt: 2,
-              }}
-            >
-              <Typography>قیمت:</Typography>
-              <Typography color="primary" fontWeight={600} variant="h2">
-                {formatPrice(finalPrice)} تومان
-              </Typography>
-
-              <Typography
-                variant="h4"
-                color="text.disabled"
-                sx={{ textDecoration: "line-through" }}
-              >
-                {formatPrice(product.price)} تومان
-              </Typography>
-            </Box>
-          ) : (
-            <Typography color="primary" fontWeight={600} variant="h2">
-              <Typography>قیمت:</Typography>
-              {formatPrice(product.price)} تومان
-            </Typography>
-          )}
-
-          {isInCart ? (
-            <Box
-              display="flex"
-              alignItems="center"
-              justifyContent="space-between"
-              mt={2}
-            >
-              <Typography variant="h4">تعداد در سبد خرید شما:</Typography>
-
-              <Box display="flex" alignItems="center" justifyContent="flex-end">
-                <IconButton
+          {inStock ? (
+            <>
+              {/* 💰 Prices */}
+              {hasDiscount ? (
+                <Box
                   sx={{
-                    color: theme.palette.primary.contrastText,
-                    backgroundColor: theme.palette.primary.main,
-                    mx: 1,
-                    "&:hover": {
-                      color: theme.palette.primary.main,
-                    },
+                    display: "flex",
+                    alignItems: "baseline",
+                    justifyContent: "space-around",
+                    gap: 1,
+                    mt: 2,
                   }}
-                  size="small"
+                >
+                  <Typography>قیمت:</Typography>
+                  <Typography color="primary" fontWeight={600} variant="h2">
+                    {formatPrice(finalPrice)} تومان
+                  </Typography>
+
+                  <Typography
+                    variant="h4"
+                    color="text.disabled"
+                    sx={{ textDecoration: "line-through" }}
+                  >
+                    {formatPrice(product.price)} تومان
+                  </Typography>
+                </Box>
+              ) : (
+                <Typography color="primary" fontWeight={600} variant="h2">
+                  <Typography>قیمت:</Typography>
+                  {formatPrice(product.price)} تومان
+                </Typography>
+              )}
+
+              {isInCart ? (
+                <Box
+                  display="flex"
+                  alignItems="center"
+                  justifyContent="space-between"
+                  mt={2}
+                >
+                  <Typography variant="h4">تعداد در سبد خرید شما:</Typography>
+
+                  <Box
+                    display="flex"
+                    alignItems="center"
+                    justifyContent="flex-end"
+                  >
+                    <IconButton
+                      sx={{
+                        color: theme.palette.primary.contrastText,
+                        backgroundColor: theme.palette.primary.main,
+                        mx: 1,
+                        "&:hover": {
+                          color: theme.palette.primary.main,
+                        },
+                      }}
+                      size="small"
+                      onClick={handleAddToCart}
+                    >
+                      <AddIcon />
+                    </IconButton>
+
+                    <Typography mx={1}>
+                      {toPersian(isInCart.quantity)}
+                    </Typography>
+
+                    <IconButton
+                      sx={{
+                        color: theme.palette.primary.contrastText,
+                        backgroundColor: theme.palette.primary.main,
+                        mx: 1,
+                        "&:hover": {
+                          color: theme.palette.primary.main,
+                        },
+                      }}
+                      size="small"
+                      onClick={handleRemoveFromcart}
+                    >
+                      {isInCart.quantity === 1 ? (
+                        <DeleteOutlineIcon />
+                      ) : (
+                        <RemoveIcon />
+                      )}
+                    </IconButton>
+                  </Box>
+                </Box>
+              ) : (
+                <Button
+                  fullWidth
+                  variant="contained"
+                  color={inStock ? "primary" : "inherit"}
+                  disabled={!inStock}
                   onClick={handleAddToCart}
-                >
-                  <AddIcon />
-                </IconButton>
-
-                <Typography mx={1}>{toPersian(isInCart.quantity)}</Typography>
-
-                <IconButton
                   sx={{
-                    color: theme.palette.primary.contrastText,
-                    backgroundColor: theme.palette.primary.main,
-                    mx: 1,
-                    "&:hover": {
-                      color: theme.palette.primary.main,
-                    },
+                    color: inStock
+                      ? theme.palette.primary.contrastText
+                      : theme.palette.text.disabled,
+                    fontWeight: 700,
+                    borderRadius: 2,
+                    py: 1,
+                    mt: 2,
                   }}
-                  size="small"
-                  onClick={handleRemoveFromcart}
                 >
-                  {isInCart.quantity === 1 ? (
-                    <DeleteOutlineIcon />
-                  ) : (
-                    <RemoveIcon />
-                  )}
-                </IconButton>
-              </Box>
-            </Box>
+                  {inStock ? " افزودن به سبد" : "نا موجود"}
+                </Button>
+              )}
+            </>
           ) : (
-            <Button
-              fullWidth
-              variant="contained"
-              color={inStock ? "primary" : "inherit"}
-              disabled={!inStock}
-              onClick={handleAddToCart}
-              sx={{
-                color: inStock
-                  ? theme.palette.primary.contrastText
-                  : theme.palette.text.disabled,
-                fontWeight: 700,
-                borderRadius: 2,
-                py: 1,
-                mt: 2,
-              }}
-            >
-              افزودن به سبد
-            </Button>
+            <Typography mt={2} variant="h4">
+              این کالا ناموجود است!
+            </Typography>
           )}
 
           {product?.shortSpecifications &&

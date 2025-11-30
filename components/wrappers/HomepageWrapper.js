@@ -42,6 +42,7 @@ const HomepageWrapper = () => {
             setRequestQuery({
               page_size: 10,
               sort: [{ field: "soldNumber", order: "desc" }],
+              filters: { stock: { type: "gt", value: 0 } }
             })
           )
         ).unwrap();
@@ -52,7 +53,7 @@ const HomepageWrapper = () => {
           getAllProducts(
             setRequestQuery({
               page_size: 10,
-              filters: { discount: { type: "gt", value: 0 } },
+              filters: { discount: { type: "gt", value: 0 }, stock: { type: "gt", value: 0 } },
             })
           )
         ).unwrap();

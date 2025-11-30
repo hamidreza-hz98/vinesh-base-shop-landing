@@ -20,7 +20,7 @@ import { selectCart } from "@/store/cart/cart.selector";
 import NoDataAvailable from "./NoDataAvailable";
 import AddressCard from "../cards/AddressCard";
 
-const Addresses = ({ isInCart = true }) => {
+const Addresses = ({ isInCart = true, controls=true }) => {
   const addresses = useSelector(selectCustomerAddresses);
   const dispatch = useDispatch();
   const { customer } = nookies.get();
@@ -184,7 +184,8 @@ useEffect(() => {
             onCloseMenu={handleMenuClose}
             onMenuOpen={handleMenuOpen}
             menuAddressId={menuAddressId}
-            controls={isInCart}
+            controls={controls}
+            isInCart={isInCart}
           />
         ))
       ) : (

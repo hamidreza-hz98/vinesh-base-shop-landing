@@ -22,7 +22,8 @@ async function fetchSeoData(slug) {
       title: seo.title,
       description: seo.description,
       keywords: seo.keywords,
-      robots: seo.robots,
+      robots: "noindex, nofollow", 
+      // seo.robots,
       canonical: seo.canonical,
       additionalMetaTags: seo.additionalMetaTags,
       openGraph: {

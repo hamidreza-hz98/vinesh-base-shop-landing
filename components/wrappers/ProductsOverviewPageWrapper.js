@@ -47,7 +47,7 @@ const ProductsOverviewPageWrapper = () => {
 
   const searchParams = useSearchParams();
   const filters = searchParams.get("filters") || {};
-  const sort = searchParams.get("sort") || null;
+  const sort = searchParams.get("sort") || [{ field: "createdAt", order: "desc" }];
   const page = searchParams.get("page") || 1;
   const page_size = searchParams.get("page_size") || 12;
   const search = searchParams.get("search") || "";

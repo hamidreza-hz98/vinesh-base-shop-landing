@@ -28,6 +28,7 @@ const AddressCard = ({
   onMenuOpen,
   menuAddressId,
   controls = true,
+  isInCart = true
 }) => {
   const theme = useTheme();
 
@@ -42,23 +43,25 @@ const AddressCard = ({
         display: "flex",
         alignItems: "center",
         justifyContent: "space-between",
-        cursor: controls ? "pointer" : "default",
+        cursor: isInCart ? "pointer" : "default",
         borderColor:
-          controls && selectedAddressId === address._id
+          isInCart && selectedAddressId === address._id
             ? theme.palette.primary.main
             : undefined,
       }}
-      onClick={() => controls && onSelect(address)}
+      onClick={() => isInCart && onSelect(address)}
     >
       <Box display="flex" alignItems="center" flexGrow={1}>
         <Box sx={{ textAlign: "right" }}>
           <Typography fontSize={18} fontWeight={600}>
-            {address.name}{" -  تحویل گیرنده: "} {address.recipientName} {" "}
+            {address.name}
+            {" -  تحویل گیرنده: "} {address.recipientName}{" "}
             {selectedAddressId === address._id && "( انتخاب شده )"}{" "}
-          
           </Typography>
 
-          <Typography fontSize={15} variant="body2">{address.address}</Typography>
+          <Typography fontSize={15} variant="body2">
+            {address.address}
+          </Typography>
 
           <Typography fontSize={14} variant="body2">
             {address.province} - {address.city} - {address.zipCode}
@@ -66,6 +69,7 @@ const AddressCard = ({
         </Box>
       </Box>
 
+      {controls && (
         <>
           {/* Desktop Actions */}
           <Box sx={{ display: { xs: "none", sm: "flex" }, gap: 1 }}>
@@ -136,6 +140,7 @@ const AddressCard = ({
             </MenuItem>
           </Menu>
         </>
+      )}
     </Paper>
   );
 };

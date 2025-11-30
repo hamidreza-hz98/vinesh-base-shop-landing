@@ -15,7 +15,7 @@ const CustomerAddressPageWrapper = () => {
   }, [dispatch, customer])
 
   return (
-    <Addresses isInCart={false} />
+    <Addresses isInCart={false} controls={true} />
   )
 }
 
